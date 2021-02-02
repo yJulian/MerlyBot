@@ -1,5 +1,7 @@
 package de.yjulian.merly.bot;
 
+import de.yjulian.merly.bot.commands.CommandListener;
+import de.yjulian.merly.bot.commands.CommandManager;
 import de.yjulian.merly.bot.events.ReadyListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -20,8 +22,11 @@ public class MerlyBot {
                 .create(token, GatewayIntent.getIntents(GatewayIntent.DEFAULT))
                 .build();
 
+        CommandManager commandManager = new CommandManager();
+
         this.jda.addEventListener(
-                new ReadyListener()
+                new ReadyListener(),
+                new CommandListener(commandManager)
         );
     }
 
