@@ -1,7 +1,9 @@
 package de.yjulian.merly.bot;
 
+import de.yjulian.merly.bot.events.ReadyListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,9 +16,13 @@ public class MerlyBot {
     private final JDA jda;
 
     public MerlyBot(String token) throws LoginException {
-        this.jda = new JDABuilder()
-                .setToken(token)
+        this.jda = JDABuilder
+                .create(token, GatewayIntent.getIntents(GatewayIntent.DEFAULT))
                 .build();
+
+        this.jda.addEventListener(
+                new ReadyListener()
+        );
     }
 
     public JDA getJda() {
