@@ -15,7 +15,7 @@ public class CommandManager {
     }
 
     @Nullable
-    private Command getCommand(@NotNull String prefix) {
+    public Command getCommand(@NotNull String prefix) {
         for (Command command : commands) {
             if (command.name().equals(prefix)) {
                 return command;
