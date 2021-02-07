@@ -3,8 +3,11 @@ package de.yjulian.merly.tests;
 import de.yjulian.merly.events.*;
 import de.yjulian.merly.events.BotReadyEvent;
 import de.yjulian.merly.events.CommandExecuteEvent;
+import net.dv8tion.jda.api.hooks.SubscribeEvent;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import javax.swing.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -28,11 +31,11 @@ public class EventTest implements EventAdapter {
         assertEquals(1, manager.fireEvent(new CommandExecuteEvent(null, null, null, null)));
     }
 
-    @EventListener
+    @EventListener()
     public void onBotReady(BotReadyEvent event) {
     }
 
-    @EventListener
+    @EventListener()
     public void onBotReady2(BotReadyEvent event) {
     }
 

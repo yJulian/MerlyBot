@@ -11,4 +11,7 @@ import java.lang.annotation.*;
 @ParametersAreNonnullByDefault
 @Documented
 public @interface EventListener {
+
+    int priority() default 0;
+
 }

@@ -4,9 +4,7 @@ import de.yjulian.merly.bot.MerlyBot;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class EventManager {
 
@@ -24,16 +22,12 @@ public class EventManager {
     public int fireEvent(Event event) {
         int executeCount = 0;
         for (EventAdapter adapter : adapters) {
+            List<Method> methods = new ArrayList<>();
             for (Method method : adapter.getClass().getMethods()) {
                 if (method.isAnnotationPresent(EventListener.class)) {
                     if (method.getParameterCount() == 1) {
                         if (method.getParameterTypes()[0].equals(event.getClass())) {
-                            try {
-                                method.invoke(adapter, event);
-                                executeCount++;
-                            } catch (IllegalAccessException | InvocationTargetException e) {
-                                e.printStackTrace();
-                            }
+                            methods.add(method);
                         }
                     } else {
                         String warning = String.format("Found invalid method in %s. " +
@@ -48,6 +42,18 @@ public class EventManager {
 
                 }
             }
+
+            methods.sort(Comparator.comparingInt(o -> o.getAnnotation(EventListener.class).priority()));
+
+            for (Method method : methods) {
+                try {
+                    method.invoke(adapter, event);
+                    executeCount++;
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+
         }
         return executeCount;
     }
