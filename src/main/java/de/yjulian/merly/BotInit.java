@@ -10,7 +10,7 @@ public class BotInit {
     public static void main(String[] args) {
         try {
             new MerlyBot(EnvUtil.getVariable("bot.token"));
-        } catch (LoginException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

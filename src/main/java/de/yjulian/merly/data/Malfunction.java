@@ -14,17 +14,17 @@ public class Malfunction {
     private final long userId;
     private final long guildId;
     private final String message;
-    private final List<String> stacktrace;
     private final String exception;
+    private final List<String> stacktrace;
 
-    public Malfunction(ObjectId _id, long channelId, long userId, long guildId, String message, List<String> stacktrace, String exception) {
+    public Malfunction(ObjectId _id, long channelId, long userId, long guildId, String message, String exception, List<String> stacktrace) {
         this._id = _id;
         this.channelId = channelId;
         this.userId = userId;
         this.guildId = guildId;
         this.message = message;
-        this.stacktrace = stacktrace;
         this.exception = exception;
+        this.stacktrace = stacktrace;
     }
 
     public Malfunction(TextChannel channel, Member member, Exception exception) {
@@ -40,5 +40,33 @@ public class Malfunction {
             this.stacktrace.add(stackTraceElement.toString());
         }
         this.exception = exception.getClass().toString();
+    }
+
+    public ObjectId getId() {
+        return _id;
+    }
+
+    public long getChannelId() {
+        return channelId;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public long getGuildId() {
+        return guildId;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getException() {
+        return exception;
+    }
+
+    public List<String> getStacktrace() {
+        return stacktrace;
     }
 }

@@ -1,36 +1,97 @@
 package de.yjulian.merly.bot;
 
-import de.yjulian.merly.bot.commands.CommandListener;
-import de.yjulian.merly.bot.commands.CommandManager;
-import de.yjulian.merly.bot.events.ReadyListener;
+import de.yjulian.merly.ProgramState;
+import de.yjulian.merly.subsystem.chat.CommandListener;
+import de.yjulian.merly.subsystem.chat.CommandManager;
+import de.yjulian.merly.events.EventManager;
+import de.yjulian.merly.bot.eventslistener.ReadyListener;
+import de.yjulian.merly.events.ProgramStateChangedEvent;
+import de.yjulian.merly.modules.ModuleManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.security.auth.login.LoginException;
-
 public class MerlyBot {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("de.yjulian.merly");
+    private static MerlyBot instance;
 
-    private final JDA jda;
+    private final String token;
+    private JDA jda;
 
-    public MerlyBot(String token) throws LoginException {
+    private final EventManager eventManager;
+    private ModuleManager moduleManager;
+    private CommandManager commandManager;
+    private ProgramState currentProgramState = ProgramState.STARTUP;
+
+    public MerlyBot(String token) throws Exception {
+        instance = this;
+
+        this.token = token;
+
+        // Initialized before pre init to fire the events.
+        this.eventManager = new EventManager();
+        preInit();
+        init();
+        postInit();
+        setProgramState(ProgramState.RUNNING);
+    }
+
+    public void shutdown() {
+        setProgramState(ProgramState.SHUTDOWN);
+        this.jda.shutdown();
+    }
+
+    private void setProgramState(ProgramState newState) {
+        this.eventManager.fireEvent(new ProgramStateChangedEvent(currentProgramState, newState));
+        this.currentProgramState = newState;
+    }
+
+    private void preInit() {
+        setProgramState(ProgramState.PRE_INIT);
+        this.moduleManager = new ModuleManager();
+        this.eventManager.addEventAdapter(this.moduleManager);
+
+        this.commandManager = new CommandManager(this);
+    }
+
+    private void init() {
+        setProgramState(ProgramState.INIT);
+
+    }
+
+    private void postInit() throws Exception {
+        setProgramState(ProgramState.POST_INIT);
+
         this.jda = JDABuilder
                 .create(token, GatewayIntent.getIntents(GatewayIntent.DEFAULT))
                 .build();
 
-        CommandManager commandManager = new CommandManager();
-
         this.jda.addEventListener(
-                new ReadyListener(),
+                new ReadyListener(eventManager),
                 new CommandListener(commandManager)
         );
     }
 
-    public JDA getJda() {
+    public static CommandManager getCommandManager() {
+        return getInstance().commandManager;
+    }
+
+    public static MerlyBot getInstance() {
+        return instance;
+    }
+
+    public ModuleManager getModuleManager() {
+        return moduleManager;
+    }
+
+    public EventManager getEventManager() {
+        return eventManager;
+    }
+
+    public JDA getJDA() {
         return jda;
     }
 

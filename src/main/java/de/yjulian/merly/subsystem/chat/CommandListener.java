@@ -1,7 +1,9 @@
-package de.yjulian.merly.bot.commands;
+package de.yjulian.merly.subsystem.chat;
 
+import de.yjulian.merly.events.CommandExecuteEvent;
 import de.yjulian.merly.exceptions.CommandException;
 import de.yjulian.merly.util.EnvUtil;
+import de.yjulian.merly.util.ExceptionUtil;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -29,20 +31,26 @@ public class CommandListener extends ListenerAdapter {
             Command command = this.commandManager.getCommand(evalMessage[0]);
 
             if (command != null) {
-                String[] arguments = new String[0];
-                System.arraycopy(evalMessage, 1, arguments, 0, evalMessage.length - 1);
-                CommandArguments commandArguments = new CommandArguments(arguments);
                 try {
-                    command.execute(commandArguments);
-                } catch (CommandException e) {
-                    if (e.hasPublicMessage()) {
-                        event.getChannel().sendMessage(e.getPublicMessage()).queue();
-                    } else {
-                        event.getChannel().sendMessage(EXCEPTION_WITHOUT_MESSAGE).queue();
+
+                    CommandArguments commandArguments = CommandArguments.parseArguments(evalMessage);
+                    CommandExecuteEvent firedEvent;
+                    try {
+                        command.execute(commandArguments);
+                        firedEvent = new CommandExecuteEvent(event.getMessage(), command, commandArguments, null);
+                    } catch (CommandException e) {
+                        if (e.hasPublicMessage()) {
+                            event.getChannel().sendMessage(e.getPublicMessage()).queue();
+                        } else {
+                            event.getChannel().sendMessage(EXCEPTION_WITHOUT_MESSAGE).queue();
+                        }
+                        firedEvent = new CommandExecuteEvent(event.getMessage(), command, commandArguments, e);
                     }
+                    this.commandManager.getBot().getEventManager().fireEvent(firedEvent);
+
                 } catch (Exception e) {
                     event.getChannel().sendMessage(EXCEPTION_WITHOUT_MESSAGE).queue();
-                    e.printStackTrace();
+                    ExceptionUtil.handleException(event.getChannel(), event.getMember(), e);
                 }
             } else {
                 event.getChannel().sendMessage(String.format(UNKNOWN_COMMAND_MESSAGE, evalMessage[0])).queue();

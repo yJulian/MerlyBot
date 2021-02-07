@@ -1,20 +1,34 @@
 package de.yjulian.merly.database;
 
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoCredential;
+import com.mongodb.client.*;
 import org.bson.Document;
+import org.bson.codecs.Codec;
+import org.bson.codecs.configuration.CodecRegistries;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.jetbrains.annotations.NotNull;
+
+import de.yjulian.merly.data.codecs.MalfunctionCodec;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Database {
 
     private static final String HOST = System.getenv("mongo.host");
     private static final int PORT = Integer.parseInt(System.getenv("mongo.port"));
+    private static final String mongoPassword = System.getenv("mongo.auth.password");
+    private static final String mongoAdminDb = System.getenv("mongo.auth.adminDb");
+    private static final String mongoUsername = System.getenv("mongo.auth.username");
     private static final String DATABASE = System.getenv("mongo.database");
     private static Database instance;
 
     private final MongoClient client;
     private final MongoDatabase database;
+    private final List<Codec<?>> codecs = new ArrayList<>();
+    private final CodecRegistry codecRegistry;
 
     /**
      * Create a new database object.
@@ -22,8 +36,40 @@ public class Database {
     public Database() {
         instance = this;
 
-        this.client = MongoClients.create(String.format("mongodb://%s:%s", HOST, PORT));
+        MongoCredential credential = MongoCredential.createCredential(
+                mongoUsername,
+                mongoAdminDb,
+                mongoPassword.toCharArray()
+        );
+
+        registerCodecs();
+
+        CodecRegistry defaultCodecRegistry = MongoClientSettings.getDefaultCodecRegistry();
+        CodecRegistry extraCodecs = CodecRegistries.fromCodecs(this.codecs);
+        codecRegistry = CodecRegistries.fromRegistries(defaultCodecRegistry, extraCodecs);
+
+        MongoClientSettings settings = MongoClientSettings.builder()
+                .applyConnectionString(new ConnectionString(String.format("mongodb://%s:%s", HOST, PORT)))
+                .credential(credential)
+                .codecRegistry(this.codecRegistry)
+                .applicationName("MerlyBot")
+                .build();
+
+        this.client = MongoClients.create(settings);
         this.database = this.client.getDatabase(DATABASE);
+    }
+
+    public static Database getInstance() {
+        return instance;
+    }
+
+    private void registerCodecs() {
+        codecs.add(new MalfunctionCodec());
+    }
+
+    @NotNull
+    public CodecRegistry getCodecRegistry() {
+        return codecRegistry;
     }
 
     /**
