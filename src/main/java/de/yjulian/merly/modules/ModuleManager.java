@@ -7,6 +7,9 @@ import de.yjulian.merly.events.EventListener;
 import de.yjulian.merly.events.ProgramStateChangedEvent;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -14,6 +17,8 @@ import java.util.List;
 
 public class ModuleManager implements EventAdapter {
 
+    private static final String README_FILE_NAME = "README.txt";
+    private static final String README_RESOURCE = "ModuleReadme.txt";
     private static final String JAVA_SUFFIX = ".jar";
     private final File moduleFolder = new File("modules/");
     private final List<InternalModule> modules = new ArrayList<>();
@@ -29,17 +34,11 @@ public class ModuleManager implements EventAdapter {
                 try {
                     modules.add(new InternalModule(file));
                 } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
+                    MerlyBot.getLogger().warn(String.format("The File %s could not be read.", file.getName()), e);
+                } catch (ClassNotFoundException | NoSuchMethodException e) {
+                    MerlyBot.getLogger().warn("Could not find or load main class", e);
+                } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
+                    MerlyBot.getLogger().warn("Could not initiate main class. Is it private?", e);
                 }
             }
         }
@@ -62,6 +61,21 @@ public class ModuleManager implements EventAdapter {
         if (!moduleFolder.exists()) {
             if (!moduleFolder.mkdir()) {
                 MerlyBot.getLogger().warn("Could not create module folder.");
+            } else {
+                try {
+                    File file = new File(moduleFolder, README_FILE_NAME);
+                    if (file.createNewFile()) {
+                        FileOutputStream fos = new FileOutputStream(file);
+                        InputStream ras = getClass().getClassLoader().getResourceAsStream(README_RESOURCE);
+                        if (ras == null) {
+                            MerlyBot.getLogger().warn("Readme resource null.");
+                        } else {
+                            ras.transferTo(fos);
+                        }
+                    }
+                } catch (IOException e) {
+                    MerlyBot.getLogger().warn(String.format("Error creating %s", README_FILE_NAME), e);
+                }
             }
         }
     }
