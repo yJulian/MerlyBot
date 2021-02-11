@@ -1,7 +1,9 @@
 package de.yjulian.merly.data;
 
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
@@ -33,6 +35,21 @@ public class Malfunction {
         this.channelId = channel.getIdLong();
         this.userId = member.getUser().getIdLong();
         this.guildId = member.getGuild().getIdLong();
+
+        this.message = exception.getMessage();
+        this.stacktrace = new ArrayList<>();
+        for (StackTraceElement stackTraceElement : exception.getStackTrace()) {
+            this.stacktrace.add(stackTraceElement.toString());
+        }
+        this.exception = exception.getClass().toString();
+    }
+
+    public Malfunction(PrivateChannel privateChannel, User user, Exception exception) {
+        this._id = new ObjectId();
+
+        this.channelId = privateChannel.getIdLong();
+        this.userId = user.getIdLong();
+        this.guildId = 0L;
 
         this.message = exception.getMessage();
         this.stacktrace = new ArrayList<>();

@@ -7,6 +7,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import de.yjulian.merly.exceptions.NoBotAvailableException;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.VoiceChannel;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -20,6 +21,15 @@ public class AudioManager {
         this.manager = new DefaultAudioPlayerManager();
     }
 
+    /**
+     * Get a audio queue for the voice channel provided. If no player is available the method with throw
+     * a {@link NoBotAvailableException}.
+     *
+     * @param voiceChannel the voice channel to join.
+     * @throws NoBotAvailableException when no bot is available.
+     * @return a {@link AudioQueueImpl} representing the player.
+     */
+    @NotNull
     public AudioQueue getAudioQueue(VoiceChannel voiceChannel) {
         Guild guild = voiceChannel.getGuild();
         if (audioQueues.containsKey(guild)) {
@@ -40,7 +50,7 @@ public class AudioManager {
         LinkedBlockingQueue<AudioTrack> queue = new LinkedBlockingQueue<>();
         AudioPlayer player = manager.createPlayer();
 
-        AudioQueue audioQueue = new AudioQueue(player, queue, voiceChannel);
+        AudioQueueImpl audioQueue = new AudioQueueImpl(player, queue, voiceChannel);
         audioQueues.put(guild, audioQueue);
         return audioQueue;
     }

@@ -5,6 +5,7 @@ import de.yjulian.merly.exceptions.CommandException;
 import de.yjulian.merly.util.EnvUtil;
 import de.yjulian.merly.util.ExceptionUtil;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,6 +22,43 @@ public class CommandListener extends ListenerAdapter {
     }
 
     @Override
+    public void onPrivateMessageReceived(@NotNull PrivateMessageReceivedEvent event) {
+        String message = event.getMessage().getContentDisplay();
+
+        if (message.startsWith(PREFIX)) {
+            message = message.substring(PREFIX.length());   // remove the prefix
+            String[] evalMessage = message.split(" ");
+
+            UserCommand command = this.commandManager.getCommand(evalMessage[0], UserCommand.class);
+
+            if (command != null) {
+                try {
+                    CommandArguments commandArguments = CommandArguments.parseArguments(evalMessage);
+                    CommandExecuteEvent firedEvent;
+                    try {
+                        command.execute(event, commandArguments);
+                        firedEvent = new CommandExecuteEvent(event.getMessage(), command, commandArguments, null);
+                    } catch (CommandException e) {
+                        if (e.hasPublicMessage()) {
+                            event.getChannel().sendMessage(e.getPublicMessage()).queue();
+                        } else {
+                            event.getChannel().sendMessage(EXCEPTION_WITHOUT_MESSAGE).queue();
+                        }
+                        firedEvent = new CommandExecuteEvent(event.getMessage(), command, commandArguments, e);
+                    }
+                    this.commandManager.getBot().getEventManager().fireEvent(firedEvent);
+
+                } catch (Exception e) {
+                    event.getChannel().sendMessage(EXCEPTION_WITHOUT_MESSAGE).queue();
+                    ExceptionUtil.handleException(event.getChannel(), event.getAuthor(), e);
+                }
+            } else {
+                event.getChannel().sendMessage(String.format(UNKNOWN_COMMAND_MESSAGE, evalMessage[0])).queue();
+            }
+        }
+    }
+
+    @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
         String message = event.getMessage().getContentDisplay();
 
@@ -28,15 +66,14 @@ public class CommandListener extends ListenerAdapter {
             message = message.substring(PREFIX.length());   // remove the prefix
             String[] evalMessage = message.split(" ");
 
-            Command command = this.commandManager.getCommand(evalMessage[0]);
+            GuildCommand command = this.commandManager.getCommand(evalMessage[0], GuildCommand.class);
 
             if (command != null) {
                 try {
-
                     CommandArguments commandArguments = CommandArguments.parseArguments(evalMessage);
                     CommandExecuteEvent firedEvent;
                     try {
-                        command.execute(commandArguments);
+                        command.execute(event, commandArguments);
                         firedEvent = new CommandExecuteEvent(event.getMessage(), command, commandArguments, null);
                     } catch (CommandException e) {
                         if (e.hasPublicMessage()) {
@@ -57,4 +94,5 @@ public class CommandListener extends ListenerAdapter {
             }
         }
     }
+
 }

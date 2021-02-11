@@ -1,6 +1,7 @@
 package de.yjulian.merly.bot;
 
 import de.yjulian.merly.ProgramState;
+import de.yjulian.merly.subsystem.audio.AudioManager;
 import de.yjulian.merly.subsystem.chat.CommandListener;
 import de.yjulian.merly.subsystem.chat.CommandManager;
 import de.yjulian.merly.events.EventManager;
@@ -25,6 +26,7 @@ public class MerlyBot {
     private ModuleManager moduleManager;
     private CommandManager commandManager;
     private ProgramState currentProgramState = ProgramState.STARTUP;
+    private AudioManager audioManager;
 
     public MerlyBot(String token) throws Exception {
         instance = this;
@@ -52,14 +54,15 @@ public class MerlyBot {
     private void preInit() {
         setProgramState(ProgramState.PRE_INIT);
         this.moduleManager = new ModuleManager();
-        this.eventManager.addEventAdapter(this.moduleManager);
 
         this.commandManager = new CommandManager(this);
+        this.eventManager.addEventAdapter(this.moduleManager, this.commandManager);
     }
 
     private void init() {
         setProgramState(ProgramState.INIT);
 
+        this.audioManager = new AudioManager();
     }
 
     private void postInit() throws Exception {
@@ -89,6 +92,10 @@ public class MerlyBot {
 
     public EventManager getEventManager() {
         return eventManager;
+    }
+
+    public AudioManager getAudioManager() {
+        return audioManager;
     }
 
     public JDA getJDA() {
