@@ -1,8 +1,8 @@
 package de.yjulian.merly.events;
 
-import de.yjulian.merly.subsystem.chat.Command;
-import de.yjulian.merly.subsystem.chat.CommandArguments;
 import de.yjulian.merly.exceptions.CommandException;
+import de.yjulian.merly.subsystem.commands.Command;
+import de.yjulian.merly.subsystem.commands.CommandArguments;
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

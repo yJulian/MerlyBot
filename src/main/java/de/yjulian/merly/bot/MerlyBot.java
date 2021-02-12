@@ -1,13 +1,15 @@
 package de.yjulian.merly.bot;
 
 import de.yjulian.merly.ProgramState;
+import de.yjulian.merly.events.EventAdapter;
 import de.yjulian.merly.subsystem.audio.AudioManager;
-import de.yjulian.merly.subsystem.chat.CommandListener;
-import de.yjulian.merly.subsystem.chat.CommandManager;
 import de.yjulian.merly.events.EventManager;
 import de.yjulian.merly.bot.eventslistener.ReadyListener;
 import de.yjulian.merly.events.ProgramStateChangedEvent;
 import de.yjulian.merly.modules.ModuleManager;
+import de.yjulian.merly.subsystem.commands.CommandListener;
+import de.yjulian.merly.subsystem.commands.CommandManager;
+import de.yjulian.merly.subsystem.commands.CommandManagerImpl;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -24,7 +26,7 @@ public class MerlyBot {
 
     private final EventManager eventManager;
     private ModuleManager moduleManager;
-    private CommandManager commandManager;
+    private CommandManagerImpl commandManager;
     private ProgramState currentProgramState = ProgramState.STARTUP;
     private AudioManager audioManager;
 
@@ -53,10 +55,12 @@ public class MerlyBot {
 
     private void preInit() {
         setProgramState(ProgramState.PRE_INIT);
-        this.moduleManager = new ModuleManager();
 
-        this.commandManager = new CommandManager(this);
-        this.eventManager.addEventAdapter(this.moduleManager, this.commandManager);
+        this.moduleManager = new ModuleManager();
+        this.commandManager = new CommandManagerImpl();
+
+        this.eventManager.addEventAdapter(this.moduleManager);
+        this.eventManager.addEventAdapter(this.commandManager);
     }
 
     private void init() {
@@ -73,8 +77,8 @@ public class MerlyBot {
                 .build();
 
         this.jda.addEventListener(
-                new ReadyListener(eventManager),
-                new CommandListener(commandManager)
+                new ReadyListener(this.eventManager),
+                new CommandListener(this.commandManager)
         );
     }
 
