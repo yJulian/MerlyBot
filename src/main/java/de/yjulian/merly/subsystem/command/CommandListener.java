@@ -1,4 +1,4 @@
-package de.yjulian.merly.subsystem.commands;
+package de.yjulian.merly.subsystem.command;
 
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;

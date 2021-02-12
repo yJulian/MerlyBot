@@ -2,8 +2,11 @@ package de.yjulian.merly.subsystem.audio;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
+import com.sedmelluq.discord.lavaplayer.track.AudioItem;
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import de.yjulian.merly.bot.MerlyBot;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 
@@ -116,6 +119,17 @@ public class AudioQueueImpl extends AudioEventAdapter implements AudioQueue {
         this.queue.clear();
     }
 
+    @Override
+    public void addTracks(AudioItem item) {
+        if (item instanceof AudioTrack) {
+            this.queue.add((AudioTrack) item);
+        } else if (item instanceof AudioPlaylist) {
+            this.queue.addAll(((AudioPlaylist) item).getTracks());
+        } else {
+            throw new UnsupportedOperationException("This audio item cannot be added.");
+        }
+    }
+
     /**
      * Play the provided auto track instantly.
      *
@@ -138,6 +152,11 @@ public class AudioQueueImpl extends AudioEventAdapter implements AudioQueue {
     @Override
     public VoiceChannel getVoiceChannel() {
         return voiceChannel;
+    }
+
+    @Override
+    public void loadTrack(String identifier) {
+        MerlyBot.getInstance().getAudioManager().getTrack(identifier, this::addTracks);
     }
 
 }

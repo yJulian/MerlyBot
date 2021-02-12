@@ -1,4 +1,4 @@
-package de.yjulian.merly.subsystem.commands;
+package de.yjulian.merly.subsystem.command;
 
 public interface GuildCommand extends Command {
 

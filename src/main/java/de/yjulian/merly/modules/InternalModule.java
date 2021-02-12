@@ -12,7 +12,7 @@ import java.net.URLClassLoader;
 import java.util.Collections;
 import java.util.Map;
 
-class InternalModule {
+public class InternalModule {
 
     private static final String MODULE_YML_NAME = "module.yml";
     private static final String MAIN_KEY = "main";
@@ -22,7 +22,7 @@ class InternalModule {
     private final JavaModule module;
     private final Map<?, ?> data;
 
-    public InternalModule(File file) throws MalformedURLException, ClassNotFoundException, NoSuchMethodException,
+    InternalModule(File file) throws MalformedURLException, ClassNotFoundException, NoSuchMethodException,
             IllegalAccessException, InvocationTargetException, InstantiationException {
         this.classLoader = new URLClassLoader(new URL[]{file.toURI().toURL()});
         InputStream information = this.classLoader.getResourceAsStream(MODULE_YML_NAME);

@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ModuleManager implements EventAdapter {
@@ -56,6 +57,9 @@ public class ModuleManager implements EventAdapter {
         }
     }
 
+    public List<InternalModule> getModules() {
+        return Collections.unmodifiableList(modules);
+    }
 
     private void checkFolder() {
         if (!moduleFolder.exists()) {

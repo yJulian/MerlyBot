@@ -1,9 +1,13 @@
-package de.yjulian.merly.subsystem.commands;
+package de.yjulian.merly.subsystem.command;
 
+import de.yjulian.merly.ProgramState;
 import de.yjulian.merly.bot.MerlyBot;
 import de.yjulian.merly.events.CommandExecuteEvent;
 import de.yjulian.merly.events.EventAdapter;
+import de.yjulian.merly.events.EventListener;
+import de.yjulian.merly.events.ProgramStateChangedEvent;
 import de.yjulian.merly.exceptions.CommandException;
+import de.yjulian.merly.subsystem.command.initial.HelpCommand;
 import de.yjulian.merly.util.EnvUtil;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
@@ -25,12 +29,7 @@ public class CommandManagerImpl implements CommandManager, EventAdapter {
     private final List<Command> commands = new ArrayList<>();
 
     @Override
-    public void addCommand(GuildCommand guildCommand) {
-        commands.add(guildCommand);
-    }
-
-    @Override
-    public void addCommand(UserCommand command) {
+    public void addCommand(Command command) {
         commands.add(command);
     }
 
@@ -60,10 +59,24 @@ public class CommandManagerImpl implements CommandManager, EventAdapter {
 
     @Override
     public List<Command> getCommands(CommandType type) {
+        if (type == CommandType.ALL)
+            return getCommands();
+
         return commands
                 .stream()
                 .filter(command -> command.type().equals(type))
                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    @EventListener
+    public void onProgramStateChange(ProgramStateChangedEvent event) {
+        if (event.getProgramState().equals(ProgramState.POST_INIT)) {
+            registerDefault();
+        }
+    }
+
+    private void registerDefault() {
+        addCommand(new HelpCommand());
     }
 
     public void call(Message messageObj, User user, Guild guild, MessageChannel messageChannel, CommandType type) {
@@ -80,7 +93,7 @@ public class CommandManagerImpl implements CommandManager, EventAdapter {
             } else {
                 try {
 
-                    CommandArguments commandArguments = new CommandArguments(user, messageObj, guild, messageChannel);
+                    CommandArguments commandArguments = new CommandArguments(type, user, messageObj, guild, messageChannel);
                     CommandExecuteEvent firedEvent;
                     try {
 

@@ -1,15 +1,15 @@
 package de.yjulian.merly.bot;
 
 import de.yjulian.merly.ProgramState;
-import de.yjulian.merly.events.EventAdapter;
+import de.yjulian.merly.console.ConsoleManager;
 import de.yjulian.merly.subsystem.audio.AudioManager;
 import de.yjulian.merly.events.EventManager;
 import de.yjulian.merly.bot.eventslistener.ReadyListener;
 import de.yjulian.merly.events.ProgramStateChangedEvent;
 import de.yjulian.merly.modules.ModuleManager;
-import de.yjulian.merly.subsystem.commands.CommandListener;
-import de.yjulian.merly.subsystem.commands.CommandManager;
-import de.yjulian.merly.subsystem.commands.CommandManagerImpl;
+import de.yjulian.merly.subsystem.command.CommandListener;
+import de.yjulian.merly.subsystem.command.CommandManager;
+import de.yjulian.merly.subsystem.command.CommandManagerImpl;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -29,6 +29,7 @@ public class MerlyBot {
     private CommandManagerImpl commandManager;
     private ProgramState currentProgramState = ProgramState.STARTUP;
     private AudioManager audioManager;
+    private ConsoleManager consoleManager;
 
     public MerlyBot(String token) throws Exception {
         instance = this;
@@ -57,10 +58,10 @@ public class MerlyBot {
         setProgramState(ProgramState.PRE_INIT);
 
         this.moduleManager = new ModuleManager();
+        this.consoleManager = new ConsoleManager(System.in);
         this.commandManager = new CommandManagerImpl();
 
-        this.eventManager.addEventAdapter(this.moduleManager);
-        this.eventManager.addEventAdapter(this.commandManager);
+        this.eventManager.addEventAdapter(this.moduleManager, this.consoleManager, this.commandManager);
     }
 
     private void init() {
@@ -88,6 +89,10 @@ public class MerlyBot {
 
     public static MerlyBot getInstance() {
         return instance;
+    }
+
+    public ConsoleManager getConsoleManager() {
+        return consoleManager;
     }
 
     public ModuleManager getModuleManager() {

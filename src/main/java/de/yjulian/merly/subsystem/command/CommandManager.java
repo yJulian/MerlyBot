@@ -1,11 +1,10 @@
-package de.yjulian.merly.subsystem.commands;
+package de.yjulian.merly.subsystem.command;
 
 import java.util.List;
 
 public interface CommandManager {
 
-    void addCommand(GuildCommand guildCommand);
-    void addCommand(UserCommand command);
+    void addCommand(Command command);
 
     Command getCommand(String prefix);
     Command getCommand(String prefix, CommandType type);
