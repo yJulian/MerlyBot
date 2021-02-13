@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.function.Consumer;
 
 public class AudioQueueImpl extends AudioEventAdapter implements AudioQueue {
 
@@ -155,8 +156,8 @@ public class AudioQueueImpl extends AudioEventAdapter implements AudioQueue {
     }
 
     @Override
-    public void loadTrack(String identifier) {
-        MerlyBot.getInstance().getAudioManager().getTrack(identifier, this::addTracks);
+    public void loadTrack(String identifier, Consumer<TrackLoadResult> resultConsumer) {
+        MerlyBot.getInstance().getAudioManager().getTrack(identifier, this::addTracks, resultConsumer);
     }
 
 }

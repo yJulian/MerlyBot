@@ -60,26 +60,30 @@ public class AudioManager {
         return audioQueue;
     }
 
-    void getTrack(String identifier, Consumer<AudioItem> itemConsumer) {
+    void getTrack(String identifier, Consumer<AudioItem> itemConsumer, Consumer<TrackLoadResult> result) {
         manager.loadItem(identifier, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
                 itemConsumer.accept(track);
+                result.accept(new TrackLoadResult(null, TrackLoadResult.State.TRACK, track));
             }
 
             @Override
             public void playlistLoaded(AudioPlaylist playlist) {
                 itemConsumer.accept(playlist);
+                result.accept(new TrackLoadResult(null, TrackLoadResult.State.PLAYLIST, playlist));
             }
 
             @Override
             public void noMatches() {
                 itemConsumer.accept(null);
+                result.accept(new TrackLoadResult(null, TrackLoadResult.State.NOTHING_FOUND, null));
             }
 
             @Override
             public void loadFailed(FriendlyException exception) {
                 itemConsumer.accept(null);
+                result.accept(new TrackLoadResult(exception, TrackLoadResult.State.EXCEPTION, null));
             }
         });
     }

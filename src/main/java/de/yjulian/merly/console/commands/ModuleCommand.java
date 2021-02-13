@@ -5,6 +5,7 @@ import de.yjulian.merly.console.ConsoleCommand;
 import de.yjulian.merly.modules.InternalModule;
 
 public class ModuleCommand implements ConsoleCommand {
+
     @Override
     public String prefix() {
         return "modules";
@@ -16,4 +17,5 @@ public class ModuleCommand implements ConsoleCommand {
             MerlyBot.getLogger().info(" - " + module.getData().get("name"));
         }
     }
+
 }

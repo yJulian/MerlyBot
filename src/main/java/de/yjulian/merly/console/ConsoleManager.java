@@ -61,8 +61,10 @@ public class ConsoleManager extends Thread implements EventAdapter {
             if (command == null) {
                 MerlyBot.getLogger().info(String.format(COMMAND_NOT_FOUND, prefix));
             } else {
-                String[] arguments = new String[0];
-                System.arraycopy(data, 1, arguments, 0, data.length - 1);
+                String[] arguments = new String[data.length - 1];
+                if (data.length > 1) {
+                    System.arraycopy(data, 1, arguments, 0, data.length - 1);
+                }
                 command.execute(arguments);
             }
         }
