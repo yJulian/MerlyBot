@@ -48,7 +48,7 @@ public class CommandManagerImpl implements CommandManager, EventAdapter {
     public Command getCommand(String prefix, CommandType type) {
         return commands
                 .stream()
-                .filter(command -> command.prefix().equals(prefix) && command.type().equals(type))
+                .filter(command -> command.prefix().equals(prefix) && checkType(command, type))
                 .findFirst()
                 .orElse(null);
     }
@@ -75,6 +75,10 @@ public class CommandManagerImpl implements CommandManager, EventAdapter {
         }
     }
 
+    private boolean checkType(Command command, CommandType type) {
+        return command.type().equals(CommandType.ALL) || command.type().equals(type);
+    }
+
     private void registerDefault() {
         addCommand(new HelpCommand());
     }
@@ -83,6 +87,7 @@ public class CommandManagerImpl implements CommandManager, EventAdapter {
         String message = messageObj.getContentDisplay();
 
         if (message.startsWith(PREFIX)) {
+            message = message.substring(PREFIX.length());
             String[] data = message.split(" ");
 
             String prefix = data[0];
