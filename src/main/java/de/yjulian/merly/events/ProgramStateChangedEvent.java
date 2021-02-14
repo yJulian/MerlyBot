@@ -1,6 +1,6 @@
 package de.yjulian.merly.events;
 
-import de.yjulian.merly.ProgramState;
+import de.yjulian.merly.util.ProgramState;
 
 public class ProgramStateChangedEvent implements Event {
 

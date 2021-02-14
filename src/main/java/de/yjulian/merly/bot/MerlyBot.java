@@ -1,6 +1,6 @@
 package de.yjulian.merly.bot;
 
-import de.yjulian.merly.ProgramState;
+import de.yjulian.merly.util.ProgramState;
 import de.yjulian.merly.console.ConsoleManager;
 import de.yjulian.merly.subsystem.audio.AudioManager;
 import de.yjulian.merly.events.EventManager;
@@ -45,6 +45,7 @@ public class MerlyBot {
     }
 
     public void shutdown() {
+        LOGGER.info("Shutting down.");
         setProgramState(ProgramState.SHUTDOWN);
         this.jda.shutdown();
     }

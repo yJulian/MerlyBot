@@ -210,7 +210,7 @@
   </target>
 
   <target name="test-junit-present">
-    <available classname="junit.framework.Test" property="junit.present" classpathref="build.test.classpath"/>
+    <available classname="junit.framework.Test" property="junit.present" classpa thref="build.test.classpath"/>
   </target>
 
   <target name="test-junit-status" 

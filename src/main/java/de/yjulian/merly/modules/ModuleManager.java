@@ -1,6 +1,6 @@
 package de.yjulian.merly.modules;
 
-import de.yjulian.merly.ProgramState;
+import de.yjulian.merly.util.ProgramState;
 import de.yjulian.merly.bot.MerlyBot;
 import de.yjulian.merly.events.EventAdapter;
 import de.yjulian.merly.events.EventListener;

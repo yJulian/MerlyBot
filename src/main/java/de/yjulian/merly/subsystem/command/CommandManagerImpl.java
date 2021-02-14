@@ -1,6 +1,6 @@
 package de.yjulian.merly.subsystem.command;
 
-import de.yjulian.merly.ProgramState;
+import de.yjulian.merly.util.ProgramState;
 import de.yjulian.merly.bot.MerlyBot;
 import de.yjulian.merly.events.CommandExecuteEvent;
 import de.yjulian.merly.events.EventAdapter;

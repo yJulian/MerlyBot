@@ -1,6 +1,7 @@
 package de.yjulian.merly.console;
 
-import de.yjulian.merly.ProgramState;
+import de.yjulian.merly.console.commands.StopCommand;
+import de.yjulian.merly.util.ProgramState;
 import de.yjulian.merly.bot.MerlyBot;
 import de.yjulian.merly.console.commands.ModuleCommand;
 import de.yjulian.merly.events.EventAdapter;
@@ -46,6 +47,7 @@ public class ConsoleManager extends Thread implements EventAdapter {
 
     private void registerDefault() {
         addCommand(new ModuleCommand());
+        addCommand(new StopCommand());
     }
 
     @Override

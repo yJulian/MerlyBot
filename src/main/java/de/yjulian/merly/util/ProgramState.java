@@ -1,4 +1,4 @@
-package de.yjulian.merly;
+package de.yjulian.merly.util;
 
 public enum ProgramState {
 
