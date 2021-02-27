@@ -15,4 +15,9 @@ public enum CommandType {
     public String getName() {
         return name;
     }
+
+    public boolean equals(CommandType type) {
+        return (this == ALL) || (this == type);
+    }
+
 }

@@ -59,9 +59,6 @@ public class CommandManagerImpl implements CommandManager, EventAdapter {
 
     @Override
     public List<Command> getCommands(CommandType type) {
-        if (type == CommandType.ALL)
-            return getCommands();
-
         return commands
                 .stream()
                 .filter(command -> command.type().equals(type))
