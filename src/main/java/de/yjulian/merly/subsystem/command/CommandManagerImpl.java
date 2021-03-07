@@ -73,7 +73,7 @@ public class CommandManagerImpl implements CommandManager, EventAdapter {
     }
 
     private boolean checkType(Command command, CommandType type) {
-        return command.type().equals(CommandType.ALL) || command.type().equals(type);
+        return command.type().equals(CommandType.GENERIC) || command.type().equals(type);
     }
 
     private void registerDefault() {

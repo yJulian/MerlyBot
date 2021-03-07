@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.awt.*;
 
-public class HelpCommand implements Command {
+public class HelpCommand implements GenericCommand {
 
     private static final String TITLE = "Help command - %s";
     private static final Color COLOR = new Color(100, 120, 210);
@@ -15,11 +15,6 @@ public class HelpCommand implements Command {
     @Override
     public String prefix() {
         return "help";
-    }
-
-    @Override
-    public CommandType type() {
-        return CommandType.ALL;
     }
 
     @Override

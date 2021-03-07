@@ -4,7 +4,7 @@ public enum CommandType {
 
     GUILD("Guild"),
     USER("PrivateChat"),
-    ALL("ALL");
+    GENERIC("Generic");
 
     private final String name;
 
@@ -17,7 +17,7 @@ public enum CommandType {
     }
 
     public boolean equals(CommandType type) {
-        return (this == ALL) || (this == type);
+        return (this == GENERIC) || (this == type);
     }
 
 }
