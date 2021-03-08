@@ -30,7 +30,8 @@ public class EventManager {
                             methods.add(method);
                         }
                     } else {
-                        String warning = String.format("Found invalid method in %s. " +
+                        String warning = String.format(
+                                "Found invalid method in %s. " +
                                         "Invalid method parameters at method %s. " +
                                         "Excepted 1 method but got %s parameters.",
                                 adapter.getClass().getName(),
