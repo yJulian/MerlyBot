@@ -2,18 +2,53 @@ package de.yjulian.merly.database;
 
 
 import com.mongodb.client.MongoCollection;
+import de.yjulian.merly.bot.MerlyBot;
 import de.yjulian.merly.data.Malfunction;
 
-public enum Collection {
+import java.lang.reflect.Field;
+import java.util.HashSet;
+import java.util.Set;
 
-    MALFUNCTION("Malfunction", Malfunction.class);
+public class Collection<T> {
+
+    // "enum" entries after this comment
+    public static Collection<Malfunction> MALFUNCTION = new Collection<>("Malfunction", Malfunction.class);
+
+
+    // no entries after this comment
+
+    // logic to "fake" an enum
+    private static final Set<Collection<?>> COLLECTIONS = new HashSet<>();
 
     private final String name;
-    private final Class<?> type;
+    private final Class<T> type;
 
-    Collection(String name, Class<?> type) {
+    private Collection(String name, Class<T> type) {
         this.name = name;
         this.type = type;
+
+        COLLECTIONS.add(this);
+    }
+
+    public static Collection<?>[] values() {
+        return COLLECTIONS.toArray(new Collection[0]);
+    }
+
+    public String name() {
+        try {
+            for (Field field : this.getClass().getFields()) {
+                if (field.get(null) == this) {
+                    return field.getName();
+                }
+            }
+        } catch (IllegalAccessException e) {
+            MerlyBot.getLogger().error("Exception in Collection name", e);
+        }
+
+        throw new RuntimeException(
+                "An error occurred fetching the name from the field. " +
+                "This is an error related to the MerlyBot API."
+        );
     }
 
     public String getName() {
@@ -26,12 +61,10 @@ public enum Collection {
 
     /**
      * Get the MongoCollection from the collection
-     * @param aClass the class. Use the data type from the Codec (E.g. {@link Malfunction}).
-     * @param <T> the type parameter
      * @return a MongoCollection
      */
-    public <T> MongoCollection<T> getCollection(Class<T> aClass) {
-        return Database.getCollection(this, aClass);
+    public MongoCollection<T> getCollection() {
+        return Database.getCollection(this, this.type);
     }
 
 }

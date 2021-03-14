@@ -1,4 +1,4 @@
-package de.yjulian.merly.data;
+package de.yjulian.merly.util.builders;
 
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.apache.commons.io.IOUtils;
