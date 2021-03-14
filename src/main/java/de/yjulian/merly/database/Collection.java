@@ -11,6 +11,9 @@ import java.util.Set;
 
 public class Collection<T> {
 
+    // This set has to be registered before the first entry
+    private static final Set<Collection<?>> COLLECTIONS = new HashSet<>();
+
     // "enum" entries after this comment
     public static Collection<Malfunction> MALFUNCTION = new Collection<>("Malfunction", Malfunction.class);
 
@@ -18,8 +21,6 @@ public class Collection<T> {
     // no entries after this comment
 
     // logic to "fake" an enum
-    private static final Set<Collection<?>> COLLECTIONS = new HashSet<>();
-
     private final String name;
     private final Class<T> type;
 
