@@ -91,16 +91,16 @@ public class Database {
         return database;
     }
 
-    public static MongoCollection<Document> getCollection(Collection collection) {
-        return getCollection(collection, Document.class);
+    public static MongoCollection<Document> getCollection(DatabaseCollection databaseCollection) {
+        return getCollection(databaseCollection, Document.class);
     }
 
-    public static <T> MongoCollection<T> getCollection(Collection collection, Class<T> type) {
-        return instance.getDatabase().getCollection(collection.getName(), type);
+    public static <T> MongoCollection<T> getCollection(DatabaseCollection databaseCollection, Class<T> type) {
+        return instance.getDatabase().getCollection(databaseCollection.getName(), type);
     }
 
-    public static <T> void insertData(Collection collection, T data, Class<T> aClass) {
-        MongoCollection<T> col = getCollection(collection, aClass);
+    public static <T> void insertData(DatabaseCollection databaseCollection, T data, Class<T> aClass) {
+        MongoCollection<T> col = getCollection(databaseCollection, aClass);
         col.insertOne(data);
     }
 
