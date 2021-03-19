@@ -28,11 +28,11 @@ public class EventTest implements EventAdapter {
         assertEquals(1, manager.fireEvent(new CommandExecuteEvent(null, null, null, null)));
     }
 
-    @EventListener()
+    @EventListener
     public void onBotReady(BotReadyEvent event) {
     }
 
-    @EventListener()
+    @EventListener
     public void onBotReady2(BotReadyEvent event) {
     }
 

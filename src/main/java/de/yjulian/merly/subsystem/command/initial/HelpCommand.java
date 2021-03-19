@@ -25,11 +25,13 @@ public class HelpCommand implements GenericCommand {
         embed.setColor(COLOR);
 
         for (Command command : MerlyBot.getCommandManager().getCommands(arguments.getType())) {
-            embed.addField(
-                    command.prefix(),
-                    command.helpProvider().getDescription(),
-                    command.helpProvider().getDescription().length() <= DESCRIPTION_DELIMITER
-            );
+            HelpProvider helpProvider = command.helpProvider();
+            if (helpProvider != null) {
+                embed.addField(
+                        command.prefix(), helpProvider.getDescription(),
+                        helpProvider.getDescription().length() <= DESCRIPTION_DELIMITER
+                );
+            }
         }
 
         arguments.getMessageChannel().sendMessage(embed.build()).queue();

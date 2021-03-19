@@ -10,7 +10,8 @@ public class JavaModule {
 
     public void onShutdown() {}
 
-    public  <T extends JavaModule> T getModule(Class<T> aClass) {
+    @SuppressWarnings("unchecked")
+    public final <T extends JavaModule> T getModule(Class<T> aClass) {
         return (T) this;
     }
 
