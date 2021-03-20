@@ -4,6 +4,9 @@ import de.yjulian.merly.bot.MerlyBot;
 import de.yjulian.merly.console.ConsoleCommand;
 import de.yjulian.merly.modules.InternalModule;
 
+import java.io.Closeable;
+import java.lang.ref.Cleaner;
+
 public class ModuleCommand implements ConsoleCommand {
 
     @Override

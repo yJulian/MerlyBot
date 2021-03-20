@@ -12,6 +12,11 @@ import java.lang.annotation.*;
 @Documented
 public @interface EventListener {
 
+    /**
+     * The priority from the event handler.
+     * A higher priority results in earlier execution.
+     * @return a integer.
+     */
     int priority() default 0;
 
 }
