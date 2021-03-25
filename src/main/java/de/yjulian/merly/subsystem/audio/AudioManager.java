@@ -52,10 +52,9 @@ public class AudioManager {
             }
         }
 
-        LinkedBlockingQueue<AudioTrack> queue = new LinkedBlockingQueue<>();
         AudioPlayer player = manager.createPlayer();
 
-        AudioQueueImpl audioQueue = new AudioQueueImpl(player, queue, voiceChannel);
+        AudioQueueImpl audioQueue = new AudioQueueImpl(player, voiceChannel);
         audioQueues.put(guild, audioQueue);
         return audioQueue;
     }

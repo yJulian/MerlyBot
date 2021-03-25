@@ -10,7 +10,6 @@ import de.yjulian.merly.bot.MerlyBot;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 
-import java.util.concurrent.BlockingQueue;
 import java.util.function.Consumer;
 
 public class AudioQueueImpl extends AudioEventAdapter implements AudioQueue {
@@ -20,14 +19,14 @@ public class AudioQueueImpl extends AudioEventAdapter implements AudioQueue {
     private static final int DEFAULT_FRAME_BUFFER = 500;
 
     private final AudioPlayer player;
-    private final BlockingQueue<AudioTrack> queue;
+    private final Playlist<AudioTrack> playlist;
     private final VoiceChannel voiceChannel;
 
     private long pausedSince = System.currentTimeMillis();
 
-    AudioQueueImpl(AudioPlayer player, BlockingQueue<AudioTrack> queue, VoiceChannel voiceChannel) {
+    AudioQueueImpl(AudioPlayer player, VoiceChannel voiceChannel) {
         this.player = player;
-        this.queue = queue;
+        this.playlist = new PlaylistImpl<>();
         this.voiceChannel = voiceChannel;
 
         this.player.addListener(this);
@@ -73,7 +72,7 @@ public class AudioQueueImpl extends AudioEventAdapter implements AudioQueue {
      */
     @Override
     public boolean nextTrack() {
-        AudioTrack nextTrack = queue.poll();
+        AudioTrack nextTrack = this.playlist.poll();
         if (nextTrack != null) {
             playTrack(nextTrack);
             return true;
@@ -117,15 +116,17 @@ public class AudioQueueImpl extends AudioEventAdapter implements AudioQueue {
      */
     @Override
     public void clearQueue() {
-        this.queue.clear();
+        this.playlist.clear();
     }
 
     @Override
     public void addTracks(AudioItem item) {
         if (item instanceof AudioTrack) {
-            this.queue.add((AudioTrack) item);
+            this.playlist.addTrack(Priority.MEDIUM, (AudioTrack) item);
         } else if (item instanceof AudioPlaylist) {
-            this.queue.addAll(((AudioPlaylist) item).getTracks());
+            for (AudioTrack track : ((AudioPlaylist) item).getTracks()) {
+                this.playlist.addTrack(Priority.MEDIUM, track);
+            }
         } else {
             throw new UnsupportedOperationException("This audio item cannot be added.");
         }
@@ -146,8 +147,8 @@ public class AudioQueueImpl extends AudioEventAdapter implements AudioQueue {
         return player;
     }
 
-    public BlockingQueue<AudioTrack> getQueue() {
-        return queue;
+    public Playlist<AudioTrack> getPlaylist() {
+        return this.playlist;
     }
 
     @Override
