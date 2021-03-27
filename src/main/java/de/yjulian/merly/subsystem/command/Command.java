@@ -1,7 +1,5 @@
 package de.yjulian.merly.subsystem.command;
 
-import org.jetbrains.annotations.Nullable;
-
 /**
  * Basic command implementation this should not be implemented unless you know exactly what you
  * are doing.
@@ -12,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
  * @see GenericCommand for a sub interface that is called on both, server and user related
  *                  command execution.
  */
-public interface Command {
+public interface Command extends Help {
 
     /**
      * The prefix for the command.
@@ -35,15 +33,5 @@ public interface Command {
      */
     void onExecute(CommandArguments arguments);
 
-    /**
-     * The help provider for the command.
-     * This can be null. Then no help is shown in the default provider for help
-     * ({@link de.yjulian.merly.subsystem.command.initial.HelpCommand}). The command is then
-     * invisible.
-     *
-     * @return a {@link HelpProvider} or null
-     */
-    @Nullable
-    HelpProvider helpProvider();
 
 }
