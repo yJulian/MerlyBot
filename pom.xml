@@ -17,8 +17,9 @@
 
     <distributionManagement>
         <repository>
-            <id>local-repository</id>
-            <url>http://server:8080/releases</url>
+            <id>github</id>
+            <name>GitHub OWNER Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/yjulian/merlybot</url>
         </repository>
     </distributionManagement>
 
