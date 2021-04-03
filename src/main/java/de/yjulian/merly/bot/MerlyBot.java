@@ -20,6 +20,9 @@ import org.slf4j.LoggerFactory;
 
 public class MerlyBot {
 
+    private final static int SCHEDULED_CORE_SIZE = 4;
+    private final static int EXECUTOR_CORE_SIZE = 8;
+
     private static final Logger LOGGER = LoggerFactory.getLogger("de.yjulian.merly");
     private static MerlyBot instance;
 
@@ -58,6 +61,7 @@ public class MerlyBot {
      */
     public void shutdown() {
         LOGGER.info("Shutting down.");
+        this.scheduler.shutdown();  // shutting down the scheduler
         setProgramState(ProgramState.SHUTDOWN);
         this.jda.shutdown();
     }
@@ -79,7 +83,7 @@ public class MerlyBot {
         setProgramState(ProgramState.PRE_INIT);
 
         this.moduleManager = new ModuleManager();
-        this.scheduler = new Scheduler();
+        this.scheduler = new Scheduler(SCHEDULED_CORE_SIZE, EXECUTOR_CORE_SIZE);
         this.consoleManager = new ConsoleManager(System.in);
         this.commandManager = new CommandManagerImpl();
 

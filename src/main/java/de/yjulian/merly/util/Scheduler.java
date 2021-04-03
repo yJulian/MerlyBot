@@ -6,21 +6,42 @@ import java.util.concurrent.*;
 
 public class Scheduler {
 
-    private final static int SCHEDULED_CORE_SIZE = 4;
-    private final static int EXECUTOR_CORE_SIZE = 8;
-
     private final ScheduledExecutorService ses;
     private final ExecutorService es;
 
-    public Scheduler() {
-        this.ses = Executors.newScheduledThreadPool(SCHEDULED_CORE_SIZE);
-        this.es = Executors.newFixedThreadPool(EXECUTOR_CORE_SIZE);
+    /**
+     * Initialize a new Scheduler with a specific thread count.
+     *
+     * @param scheduledCoreSize the amount of parallel scheduled tasks.
+     * @param executorCoreSize the amount of parallel tasks.
+     */
+    public Scheduler(final int scheduledCoreSize, final int executorCoreSize) {
+        this.ses = Executors.newScheduledThreadPool(scheduledCoreSize);
+        this.es = Executors.newFixedThreadPool(executorCoreSize);
     }
 
+    /**
+     * Get the scheduler instance to add new events.
+     *
+     * @return the main scheduler instance.
+     */
     public static Scheduler getInstance() {
         return MerlyBot.getInstance().getScheduler();
     }
 
+    /**
+     * Shutdown the scheduler
+     */
+    public void shutdown() {
+        this.ses.shutdown();
+        this.es.shutdown();
+    }
+
+    /**
+     * Execute a new runnable in an async context.
+     * @param task the task that is going to be executed.
+     * @return the future from the ExecutorService
+     */
     public Future<?> execute(Runnable task) {
         return es.submit(task);
     }

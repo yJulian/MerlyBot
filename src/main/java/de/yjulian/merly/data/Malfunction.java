@@ -1,9 +1,6 @@
 package de.yjulian.merly.data;
 
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.PrivateChannel;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
@@ -29,7 +26,7 @@ public class Malfunction {
         this.stacktrace = stacktrace;
     }
 
-    public Malfunction(TextChannel channel, Member member, Exception exception) {
+    public Malfunction(MessageChannel channel, Member member, Exception exception) {
         this._id = new ObjectId();
 
         this.channelId = channel.getIdLong();
@@ -44,7 +41,7 @@ public class Malfunction {
         this.exception = exception.getClass().toString();
     }
 
-    public Malfunction(PrivateChannel privateChannel, User user, Exception exception) {
+    public Malfunction(MessageChannel privateChannel, User user, Exception exception) {
         this._id = new ObjectId();
 
         this.channelId = privateChannel.getIdLong();

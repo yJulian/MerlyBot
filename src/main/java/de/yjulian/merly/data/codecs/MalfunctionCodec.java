@@ -13,10 +13,10 @@ import java.util.List;
 
 public class MalfunctionCodec implements Codec<Malfunction> {
 
-    private static final String ID_KEY = "_id";
-    private static final String CHANNEL_KEY = "channel";
-    private static final String USER_KEY = "user";
-    private static final String GUILD_KEY = "guild";
+    public static final String ID_KEY = "_id";
+    public static final String CHANNEL_KEY = "channel";
+    public static final String USER_KEY = "user";
+    public static final String GUILD_KEY = "guild";
     private static final String MESSAGE_KEY = "message";
     private static final String EXCEPTION_KEY = "exception";
     private static final String STACKTRACE_KEY = "stacktrace";
