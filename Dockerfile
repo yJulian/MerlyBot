@@ -1,4 +1,17 @@
-FROM adoptopenjdk:11-jre-hotspot
-WORKDIR /opt/app
-COPY ./data /opt/app
-CMD ["java", "-jar", "MerlyBot-1.0.jar"]
+#
+# Build stage
+#
+FROM maven:3.6.0-jdk-11-slim AS build
+COPY src /home/app/src
+COPY pom.xml /home/app
+RUN mvn -f /home/app/pom.xml clean package
+
+#
+# Package stage
+#
+FROM openjdk:11-jre-slim
+COPY --from=build /home/app/target/merly.jar /usr/local/lib/merly.jar
+COPY --from=build /home/app/target/lib/*  /usr/local/lib/lib/
+VOLUME ["/usr/local/lib/modules"]
+VOLUME ["/usr/local/lib/scripts"]
+ENTRYPOINT ["java","-jar","/usr/local/lib/merly.jar"]
