@@ -5,6 +5,8 @@ import de.yjulian.merly.bot.MerlyBot;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 public class EventManager {
 
@@ -17,6 +19,15 @@ public class EventManager {
     public void addEventAdapter(EventAdapter adapter, EventAdapter... additions) {
         this.adapters.add(adapter);
         this.adapters.addAll(Arrays.asList(additions));
+    }
+
+    public void fireEventAsync(Event event, Consumer<Integer> amount) {
+        MerlyBot.getInstance().getScheduler().execute(() -> {
+            int firedEvents = fireEvent(event);
+            if (amount != null) {
+                amount.accept(firedEvents);
+            }
+        });
     }
 
     public int fireEvent(Event event) {
