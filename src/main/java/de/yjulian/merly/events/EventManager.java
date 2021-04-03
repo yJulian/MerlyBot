@@ -5,7 +5,6 @@ import de.yjulian.merly.bot.MerlyBot;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 public class EventManager {
