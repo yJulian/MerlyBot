@@ -1,6 +1,6 @@
 package de.yjulian.merly.subsystem.command;
 
-import de.yjulian.merly.util.ProgramState;
+import de.yjulian.merly.util.*;
 import de.yjulian.merly.bot.MerlyBot;
 import de.yjulian.merly.events.CommandExecuteEvent;
 import de.yjulian.merly.events.EventAdapter;
@@ -8,11 +8,7 @@ import de.yjulian.merly.events.EventListener;
 import de.yjulian.merly.events.ProgramStateChangedEvent;
 import de.yjulian.merly.exceptions.CommandException;
 import de.yjulian.merly.subsystem.command.initial.HelpCommand;
-import de.yjulian.merly.util.EnvUtil;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -115,6 +111,12 @@ public class CommandManagerImpl implements CommandManager, EventAdapter {
                     MerlyBot.getInstance().getEventManager().fireEvent(firedEvent);
 
                 } catch (Exception ex) {
+                    // On generic events (not a command event) fire the handle exception code.
+                    if (type == CommandType.USER) {
+                        ExceptionUtil.handleException((PrivateChannel) messageChannel, user, ex);
+                    } else if (type == CommandType.GUILD) {
+                        ExceptionUtil.handleException((TextChannel) messageChannel, guild.getMember(user), ex);
+                    }
                     messageChannel.sendMessage(EXCEPTION_WITHOUT_MESSAGE).queue();
                 }
             }
