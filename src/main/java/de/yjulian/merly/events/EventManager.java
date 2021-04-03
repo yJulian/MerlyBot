@@ -21,16 +21,16 @@ public class EventManager {
         this.adapters.addAll(Arrays.asList(additions));
     }
 
-    public void fireEventAsync(Event event, Consumer<Integer> amount) {
+    public <T extends Event> void fireEventAsync(T event, Consumer<EventFutur<T>> amount) {
         MerlyBot.getInstance().getScheduler().execute(() -> {
-            int firedEvents = fireEvent(event);
+            EventFutur<T> firedEvents = fireEvent(event);
             if (amount != null) {
                 amount.accept(firedEvents);
             }
         });
     }
 
-    public int fireEvent(Event event) {
+    public <T extends Event> EventFutur<T> fireEvent(T event) {
         int executeCount = 0;
         for (EventAdapter adapter : adapters) {
             List<Method> methods = new ArrayList<>();
@@ -66,7 +66,7 @@ public class EventManager {
             }
 
         }
-        return executeCount;
+        return new EventFutur<>(event, executeCount);
     }
 
 }

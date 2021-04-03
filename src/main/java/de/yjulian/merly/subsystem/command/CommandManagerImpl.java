@@ -7,7 +7,7 @@ import de.yjulian.merly.events.EventAdapter;
 import de.yjulian.merly.events.EventListener;
 import de.yjulian.merly.events.ProgramStateChangedEvent;
 import de.yjulian.merly.exceptions.CommandException;
-import de.yjulian.merly.subsystem.command.initial.HelpCommand;
+import de.yjulian.merly.subsystem.command.initial.HelpProviderCommand;
 import net.dv8tion.jda.api.entities.*;
 import org.jetbrains.annotations.Nullable;
 
@@ -73,7 +73,7 @@ public class CommandManagerImpl implements CommandManager, EventAdapter {
     }
 
     private void registerDefault() {
-        addCommand(new HelpCommand());
+        addCommand(new HelpProviderCommand());
     }
 
     public void call(Message messageObj, User user, Guild guild, MessageChannel messageChannel, CommandType type) {

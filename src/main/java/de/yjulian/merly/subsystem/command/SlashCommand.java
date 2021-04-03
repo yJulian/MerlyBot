@@ -6,7 +6,7 @@ package de.yjulian.merly.subsystem.command;
  * This interface is not fully implemented and is not going to work.
  * It is going to be finished in a future release of the engine.
  */
-public interface SlashCommand extends Help {
+public interface SlashCommand extends HelpProvider {
 
     /**
      * Get the name/prefix from the slash command.

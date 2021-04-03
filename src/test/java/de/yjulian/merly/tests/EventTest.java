@@ -20,12 +20,12 @@ public class EventTest implements EventAdapter {
 
     @Test
     public void callBotReady() {
-        assertEquals(2, manager.fireEvent(new BotReadyEvent()));
+        assertEquals(2, manager.fireEvent(new BotReadyEvent()).getExecutedAmount());
     }
 
     @Test
     public void callCommandEvent() {
-        assertEquals(1, manager.fireEvent(new CommandExecuteEvent(null, null, null, null)));
+        assertEquals(1, manager.fireEvent(new CommandExecuteEvent(null, null, null, null)).getExecutedAmount());
     }
 
     @EventListener

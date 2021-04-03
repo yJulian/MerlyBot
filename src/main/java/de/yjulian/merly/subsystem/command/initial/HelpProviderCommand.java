@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.awt.*;
 
-public class HelpCommand implements GenericCommand {
+public class HelpProviderCommand implements GenericCommand {
 
     private static final String TITLE = "Help command - %s";
     private static final Color COLOR = new Color(100, 120, 210);
@@ -25,11 +25,11 @@ public class HelpCommand implements GenericCommand {
         embed.setColor(COLOR);
 
         for (Command command : MerlyBot.getCommandManager().getCommands(arguments.getType())) {
-            HelpProvider helpProvider = command.helpProvider();
-            if (helpProvider != null) {
+            Help help = command.helpProvider();
+            if (help != null) {
                 embed.addField(
-                        command.prefix(), helpProvider.getDescription(),
-                        helpProvider.getDescription().length() <= DESCRIPTION_DELIMITER
+                        command.prefix(), help.getDescription(),
+                        help.getDescription().length() <= DESCRIPTION_DELIMITER
                 );
             }
         }
@@ -38,8 +38,8 @@ public class HelpCommand implements GenericCommand {
     }
 
     @Override
-    public HelpProvider helpProvider() {
-        return HelpProvider.Builder("Shows this help screen.").build();
+    public Help helpProvider() {
+        return Help.Builder("Shows this help screen.").build();
     }
 
 }

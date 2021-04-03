@@ -10,7 +10,7 @@ package de.yjulian.merly.subsystem.command;
  * @see GenericCommand for a sub interface that is called on both, server and user related
  *                  command execution.
  */
-public interface Command extends Help {
+public interface Command extends HelpProvider {
 
     /**
      * The prefix for the command.
