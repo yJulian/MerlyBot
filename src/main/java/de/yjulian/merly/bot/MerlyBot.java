@@ -1,5 +1,6 @@
 package de.yjulian.merly.bot;
 
+import de.yjulian.merly.events.JDABuildEvent;
 import de.yjulian.merly.util.ProgramState;
 import de.yjulian.merly.console.ConsoleManager;
 import de.yjulian.merly.subsystem.audio.AudioManager;
@@ -99,10 +100,21 @@ public class MerlyBot {
     private void postInit() throws Exception {
         setProgramState(ProgramState.POST_INIT);
 
-        this.jda = JDABuilder
-                .create(token, GatewayIntent.getIntents(GatewayIntent.DEFAULT))
-                .build();
+        JDABuilder jdaBuilder = JDABuilder.create(token, GatewayIntent.getIntents(GatewayIntent.DEFAULT));
 
+        JDABuildEvent jdaBuildEvent = new JDABuildEvent(jdaBuilder);    // create a new jda build event
+        getEventManager().fireEvent(jdaBuildEvent); // fire the event
+        jdaBuilder = jdaBuildEvent.getJDABuilder(); // get the jda builder back
+
+        this.jda = jdaBuilder.build();
+
+        addDefaultEventListeners();
+    }
+
+    /**
+     * Initialize the default event listeners from the bot.
+     */
+    private void addDefaultEventListeners() {
         this.jda.addEventListener(
                 new ReadyListener(this.eventManager),
                 new CommandListener(this.commandManager)

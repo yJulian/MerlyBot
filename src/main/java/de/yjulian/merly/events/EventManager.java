@@ -40,7 +40,6 @@ public class EventManager {
                         );
                         MerlyBot.getLogger().warn(warning);
                     }
-
                 }
             }
 
