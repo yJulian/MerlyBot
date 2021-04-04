@@ -6,7 +6,7 @@
 
     <groupId>de.yjulian</groupId>
     <artifactId>MerlyBot</artifactId>
-    <version>1.0</version>
+    <version>1.0.0</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -14,14 +14,6 @@
         <jda.version>4.2.0_249</jda.version>
         <lavaplayer.version>1.3.67</lavaplayer.version>
     </properties>
-
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <name>GitHub OWNER Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/yjulian/merlybot</url>
-        </repository>
-    </distributionManagement>
 
     <build>
         <plugins>

@@ -2,6 +2,11 @@
 <project version="4">
   <component name="RemoteRepositoriesConfiguration">
     <remote-repository>
+      <option name="id" value="github" />
+      <option name="name" value="github" />
+      <option name="url" value="https://maven.pkg.github.com/yjulian/*" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="central" />
       <option name="name" value="Central Repository" />
       <option name="url" value="https://repo.maven.apache.org/maven2" />
@@ -12,6 +17,11 @@
       <option name="url" value="https://m2.dv8tion.net/releases" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="github" />
+      <option name="name" value="github" />
+      <option name="url" value="https://maven.pkg.github.com/yJulian/*" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="jcenter" />
       <option name="name" value="jcenter-bintray" />
       <option name="url" value="https://jcenter.bintray.com" />
@@ -20,6 +30,11 @@
       <option name="id" value="github" />
       <option name="name" value="github" />
       <option name="url" value="https://maven.pkg.github.com/OWNER/*" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="github" />
+      <option name="name" value="Github Repo" />
+      <option name="url" value="https://maven.pkg.github.com/yjulian/*" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="central" />
