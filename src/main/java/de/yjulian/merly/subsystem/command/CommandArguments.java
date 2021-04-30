@@ -12,6 +12,7 @@ public class CommandArguments {
     private final MessageChannel messageChannel;
     private final Guild guild;
     private final Message message;
+    private String contentDisplay;
 
     public CommandArguments(CommandType type, User user, Message message, Guild guild, MessageChannel messageChannel) {
         this.type = type;
@@ -19,6 +20,21 @@ public class CommandArguments {
         this.messageChannel = messageChannel;
         this.guild = guild;
         this.message = message;
+
+        this.contentDisplay = message.getContentDisplay();
+    }
+
+    public CommandArguments(CommandType type, User user, MessageChannel messageChannel, Guild guild, Message message, String contentDisplay) {
+        this.type = type;
+        this.user = user;
+        this.messageChannel = messageChannel;
+        this.guild = guild;
+        this.message = message;
+        this.contentDisplay = contentDisplay;
+    }
+
+    public void overrideContentDisplay(String contentDisplay) {
+        this.contentDisplay = contentDisplay;
     }
 
     /**
@@ -59,9 +75,15 @@ public class CommandArguments {
 
     /**
      * Get the native JDA message.
+     * This method should not be used because if a alias is used there is no way to distinguish if this
+     * is the original message.
+     *
+     * See {@link #getContentDisplay()}
+     * @deprecated because the {@link #getContentDisplay()} method should be used.
      * @return the raw message object.
      */
     @NotNull
+    @Deprecated
     public Message getMessage() {
         return message;
     }
@@ -81,7 +103,7 @@ public class CommandArguments {
      */
     @NotNull
     public String getContentDisplay() {
-        return message.getContentDisplay();
+        return contentDisplay;
     }
 
 }
