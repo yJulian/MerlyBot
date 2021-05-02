@@ -11,6 +11,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collections;
 import java.util.Map;
+import java.util.UUID;
 
 public class InternalModule {
 
@@ -18,13 +19,16 @@ public class InternalModule {
     private static final String MAIN_KEY = "main";
     private static final Yaml YAML = new Yaml();
 
+    private final UUID uuid;
     private final URLClassLoader classLoader;
     private final JavaModule module;
     private final Map<?, ?> data;
 
     InternalModule(File file) throws MalformedURLException, ClassNotFoundException, NoSuchMethodException,
             IllegalAccessException, InvocationTargetException, InstantiationException {
-        this.classLoader = new URLClassLoader(new URL[]{file.toURI().toURL()});
+        this.uuid = UUID.randomUUID();
+        URL[] classes = {file.toURI().toURL()};
+        this.classLoader = new URLClassLoader(uuid.toString(), classes, this.getClassLoader());
         InputStream information = this.classLoader.getResourceAsStream(MODULE_YML_NAME);
         this.data = YAML.loadAs(information, Map.class);
         if (!data.containsKey(MAIN_KEY)) {
@@ -44,6 +48,10 @@ public class InternalModule {
 
         this.module = (JavaModule) mainClassRaw.getConstructor().newInstance();
         this.module.onLoad();
+    }
+
+    public UUID getUUID() {
+        return uuid;
     }
 
     public JavaModule getModule() {

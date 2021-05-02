@@ -50,4 +50,17 @@ public class Scheduler {
         return ses.schedule(task, delay, unit);
     }
 
+    /**
+     * Schedule a task at a fixed rate.
+
+     * @param task the task to execute.
+     * @param initialDelay the initial delay.
+     * @param period the period between two executes.
+     * @param unit the time unit.
+     * @return a scheduled future.
+     */
+    public ScheduledFuture<?> scheduleAtFixedRate(Runnable task, long initialDelay, long period, TimeUnit unit) {
+        return ses.scheduleAtFixedRate(task, initialDelay, period, unit);
+    }
+
 }

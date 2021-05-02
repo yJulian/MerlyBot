@@ -15,6 +15,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 public class ModuleManager implements EventAdapter {
 
@@ -30,7 +31,12 @@ public class ModuleManager implements EventAdapter {
     }
 
     private void loadModules() {
-        for (File file : moduleFolder.listFiles()) {
+        File[] folder = moduleFolder.listFiles();
+        if (folder == null) {
+            throw new RuntimeException("The modules folder is empty.");
+        }
+
+        for (File file : folder) {
             if (file.getName().endsWith(JAVA_SUFFIX)) {
                 try {
                     modules.add(new InternalModule(file));
@@ -54,6 +60,24 @@ public class ModuleManager implements EventAdapter {
             case POST_INIT: modules.forEach(internalModule -> internalModule.getModule().onPostInit()); break;
             case RUNNING: modules.forEach(internalModule -> internalModule.getModule().onStartupComplete()); break;
             case SHUTDOWN: modules.forEach(internalModule -> internalModule.getModule().onShutdown()); break;
+        }
+    }
+
+    /**
+     * Get the java module from its class loader.
+     * @param classLoader the class loader to compare.
+     * @return the java module or null if not from a valid module manager class loader.
+     */
+    public static JavaModule getJavaModuleByClassLoader(ClassLoader classLoader) {
+        try {
+            for (InternalModule module : MerlyBot.getInstance().getModuleManager().modules) {
+                if (module.getClassLoader().equals(classLoader)) {
+                    return module.getModule();
+                }
+            }
+            return null;
+        } catch (IllegalArgumentException e) {
+            return null;
         }
     }
 
