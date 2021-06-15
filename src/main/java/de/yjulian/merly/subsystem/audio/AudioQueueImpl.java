@@ -72,7 +72,7 @@ public class AudioQueueImpl extends AudioEventAdapter implements AudioQueue {
      */
     @Override
     public boolean nextTrack() {
-        AudioTrack nextTrack = this.playlist.poll();
+        AudioTrack nextTrack = pollNextTrack();
         if (nextTrack != null) {
             playTrack(nextTrack);
             return true;
@@ -120,7 +120,7 @@ public class AudioQueueImpl extends AudioEventAdapter implements AudioQueue {
     }
 
     @Override
-    public void addTracks(AudioItem item) {
+    public void addTrack(AudioItem item) {
         if (item instanceof AudioTrack) {
             this.playlist.addTrack(Priority.MEDIUM, (AudioTrack) item);
         } else if (item instanceof AudioPlaylist) {
@@ -156,9 +156,19 @@ public class AudioQueueImpl extends AudioEventAdapter implements AudioQueue {
         return voiceChannel;
     }
 
+    /**
+     * Get and remove the head of the playlist.
+     *
+     * @return a AudioTrack or null.
+     */
+    @Override
+    public AudioTrack pollNextTrack() {
+        return this.playlist.poll();
+    }
+
     @Override
     public void loadTrack(String identifier, Consumer<TrackLoadResult> resultConsumer) {
-        MerlyBot.getInstance().getAudioManager().getTrack(identifier, this::addTracks, resultConsumer);
+        MerlyBot.getInstance().getAudioManager().getTrack(identifier, this::addTrack, resultConsumer);
     }
 
 }

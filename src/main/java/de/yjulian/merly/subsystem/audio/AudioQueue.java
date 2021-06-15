@@ -55,7 +55,7 @@ public interface AudioQueue {
      * Add tracks to the queue.
      * @param item a audio item
      */
-    void addTracks(AudioItem item);
+    void addTrack(AudioItem item);
 
     /**
      * Play a track instantly.
@@ -69,6 +69,12 @@ public interface AudioQueue {
      * @return a voice channel or null.
      */
     VoiceChannel getVoiceChannel();
+
+    /**
+     * Get and remove the head of the playlist.
+     * @return a AudioTrack or null.
+     */
+    AudioTrack pollNextTrack();
 
     /**
      * Load a track from a specific identifier. E.g. a youtube link.
