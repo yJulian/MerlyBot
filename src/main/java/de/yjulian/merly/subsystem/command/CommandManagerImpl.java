@@ -1,11 +1,9 @@
 package de.yjulian.merly.subsystem.command;
 
+import de.yjulian.merly.events.*;
+import de.yjulian.merly.events.EventListener;
 import de.yjulian.merly.util.*;
 import de.yjulian.merly.bot.MerlyBot;
-import de.yjulian.merly.events.CommandExecuteEvent;
-import de.yjulian.merly.events.EventAdapter;
-import de.yjulian.merly.events.EventListener;
-import de.yjulian.merly.events.ProgramStateChangedEvent;
 import de.yjulian.merly.exceptions.CommandException;
 import de.yjulian.merly.subsystem.command.initial.HelpProviderCommand;
 import net.dv8tion.jda.api.entities.*;
@@ -104,9 +102,14 @@ public class CommandManagerImpl implements CommandManager, AliasManager, EventAd
                     CommandExecuteEvent firedEvent;
                     try {
 
+                        CommandPreExecuteEvent event = new CommandPreExecuteEvent(messageObj, command, commandArguments);
+                        MerlyBot.getInstance().getEventManager().fireEvent(event);
+
+                        if (event.isCanceled())
+                            return;
+
                         command.onExecute(commandArguments);
                         firedEvent = new CommandExecuteEvent(messageObj, command, commandArguments, null);
-
                     } catch (CommandException ex) {
 
                         if (ex.hasPublicMessage()) {
