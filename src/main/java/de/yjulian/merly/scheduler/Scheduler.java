@@ -1,4 +1,4 @@
-package de.yjulian.merly.util;
+package de.yjulian.merly.scheduler;
 
 import de.yjulian.merly.bot.MerlyBot;
 
@@ -46,8 +46,24 @@ public class Scheduler {
         return es.submit(task);
     }
 
-    public ScheduledFuture<?> scheduledExecute(Runnable task, long delay, TimeUnit unit) {
+    /**
+     * Execute a task after a given delay.
+     * @param task the task to execute.
+     * @param delay the delay for the execution.
+     * @param unit the time unit for the delay.
+     * @return a scheduled future.
+     */
+    public ScheduledFuture<?> schedule(Runnable task, long delay, TimeUnit unit) {
         return ses.schedule(task, delay, unit);
+    }
+
+    /**
+     * Execute a task after a given delay.
+     * @param task the scheduled task.
+     * @return a scheduled future.
+     */
+    public ScheduledFuture<?> schedule(ScheduledTask task) {
+        return ses.schedule(task, task.getDelay(), task.getTimeUnit());
     }
 
     /**
@@ -61,6 +77,16 @@ public class Scheduler {
      */
     public ScheduledFuture<?> scheduleAtFixedRate(Runnable task, long initialDelay, long period, TimeUnit unit) {
         return ses.scheduleAtFixedRate(task, initialDelay, period, unit);
+    }
+
+    /**
+     * Schedule a task at a fixed rate.
+     *
+     * @param task the task to execute.
+     * @return a scheduled future.
+     */
+    public ScheduledFuture<?> scheduleAtFixedRate(FixedRateScheduledTask task) {
+        return ses.scheduleAtFixedRate(task, task.getDelay(), task.getPeriod(), task.getTimeUnit());
     }
 
 }

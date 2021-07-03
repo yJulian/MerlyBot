@@ -14,12 +14,7 @@ public class ServiceManager {
     private final List<ServiceData> services = new ArrayList<>();
 
     public void registerService(@NotNull Service service) {
-        ScheduledFuture<?> sf = MerlyBot.getInstance().getScheduler().scheduleAtFixedRate(
-                service::onServiceExecute,
-                service.initialDelayMs(),
-                service.serviceDelayMs(),
-                TimeUnit.MILLISECONDS
-        );
+        ScheduledFuture<?> sf = MerlyBot.getInstance().getScheduler().scheduleAtFixedRate(new ServiceAdapter(service));
 
         services.add(new ServiceData(service, sf));
     }
@@ -39,15 +34,7 @@ public class ServiceManager {
         return serviceDataOptional.orElse(null);
     }
 
-    private static class ServiceData {
-
-        private final Service service;
-        private final ScheduledFuture<?> future;
-
-        public ServiceData(Service service, ScheduledFuture<?> future) {
-            this.service = service;
-            this.future = future;
-        }
+    private record ServiceData(Service service, ScheduledFuture<?> future) {
 
         public Service getService() {
             return service;

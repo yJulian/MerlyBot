@@ -13,7 +13,7 @@ import de.yjulian.merly.modules.ModuleManager;
 import de.yjulian.merly.subsystem.command.CommandListener;
 import de.yjulian.merly.subsystem.command.CommandManager;
 import de.yjulian.merly.subsystem.command.CommandManagerImpl;
-import de.yjulian.merly.util.Scheduler;
+import de.yjulian.merly.scheduler.Scheduler;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;

@@ -7,6 +7,8 @@ import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
+
 public class CommandExecuteEvent implements Event {
 
     private final Message message;
@@ -14,7 +16,7 @@ public class CommandExecuteEvent implements Event {
     private final CommandArguments arguments;
     private final CommandException exception;
 
-    public CommandExecuteEvent(Message message, Command command, CommandArguments arguments, CommandException exception) {
+    public CommandExecuteEvent(Message message, Command command, CommandArguments arguments, CommandException exception) throws IOException {
         this.message = message;
         this.command = command;
         this.arguments = arguments;
