@@ -1,13 +1,13 @@
 package de.yjulian.merly.exceptions;
 
-public class NoBotAvailableException extends RuntimeException {
+public class BotUnavailableException extends RuntimeException {
 
     /**
      * Constructs a new runtime exception with {@code null} as its
      * detail message.  The cause is not initialized, and may subsequently be
      * initialized by a call to {@link #initCause}.
      */
-    public NoBotAvailableException() {
+    public BotUnavailableException() {
     }
 
     /**
@@ -18,7 +18,7 @@ public class NoBotAvailableException extends RuntimeException {
      * @param message the detail message. The detail message is saved for
      *                later retrieval by the {@link #getMessage()} method.
      */
-    public NoBotAvailableException(String message) {
+    public BotUnavailableException(String message) {
         super(message);
     }
 }

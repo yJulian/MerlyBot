@@ -1,20 +1,18 @@
 package de.yjulian.merly.subsystem.audio;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.player.*;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioItem;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import de.yjulian.merly.exceptions.NoBotAvailableException;
+import de.yjulian.merly.bot.MerlyBot;
+import de.yjulian.merly.exceptions.BotUnavailableException;
+import de.yjulian.merly.util.EnumUtils;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 
 public class AudioManager {
@@ -24,14 +22,45 @@ public class AudioManager {
 
     public AudioManager() {
         this.manager = new DefaultAudioPlayerManager();
+        init();
+    }
+
+    private void init() {
+        MerlyBot.getLogger().info("Initializing Merly Bot - Audio Manager");
+        AudioConfiguration.ResamplingQuality resamplingQuality = EnumUtils
+                .getOrDefault(AudioConfiguration.ResamplingQuality.class,
+                        System.getenv("MERLY_RESAMPLING_QUALITY"),
+                        AudioConfiguration.ResamplingQuality.MEDIUM
+                );
+        MerlyBot.getLogger().info(String.format("Audio Resampling Quality: %s", resamplingQuality.name()));
+
+        MerlyBot.getLogger().info("Initializing Merly Bot - Finished");
+        setCurrentQuality(resamplingQuality);
+    }
+
+    public AudioConfiguration.ResamplingQuality getCurrentQuality() {
+        return getConfiguration().getResamplingQuality();
+    }
+
+    public void setCurrentQuality(AudioConfiguration.ResamplingQuality quality) {
+        getConfiguration().setResamplingQuality(quality);
+        MerlyBot.getLogger().debug(String.format("Audio Resampling Quality updated to %s", quality.name()));
+    }
+
+    /**
+     * Get the current audio configuration.
+     * @return the current configuration.
+     */
+    public AudioConfiguration getConfiguration() {
+        return this.manager.getConfiguration();
     }
 
     /**
      * Get a audio queue for the voice channel provided. If no player is available the method with throw
-     * a {@link NoBotAvailableException}.
+     * a {@link BotUnavailableException}.
      *
      * @param voiceChannel the voice channel to join.
-     * @throws NoBotAvailableException when no bot is available.
+     * @throws BotUnavailableException when no bot is available.
      * @return a {@link AudioQueueImpl} representing the player.
      */
     @NotNull
@@ -47,7 +76,7 @@ public class AudioManager {
                     audioQueue.moveChannel(voiceChannel);
                     return audioQueue;
                 } else {
-                    throw new NoBotAvailableException("There is no bot currently available.");
+                    throw new BotUnavailableException("There is no bot currently available.");
                 }
             }
         }

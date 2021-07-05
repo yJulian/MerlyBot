@@ -1,8 +1,6 @@
 package de.yjulian.merly.bot;
 
 import de.yjulian.merly.events.JDABuildEvent;
-import de.yjulian.merly.subsystem.service.Service;
-import de.yjulian.merly.subsystem.service.ServiceManager;
 import de.yjulian.merly.util.ProgramState;
 import de.yjulian.merly.console.ConsoleManager;
 import de.yjulian.merly.subsystem.audio.AudioManager;
@@ -38,7 +36,6 @@ public class MerlyBot {
     private AudioManager audioManager;
     private ConsoleManager consoleManager;
     private Scheduler scheduler;
-    private ServiceManager serviceManager;
 
     /**
      * Create a new instance from the MerlyBot
@@ -99,7 +96,6 @@ public class MerlyBot {
     private void init() {
         setProgramState(ProgramState.INIT);
 
-        this.serviceManager = new ServiceManager();
         this.audioManager = new AudioManager();
     }
 
@@ -148,25 +144,6 @@ public class MerlyBot {
      */
     public static MerlyBot getInstance() {
         return instance;
-    }
-
-    /**
-     * Register a new service in the bot.
-     * This is a shortcut to {@link ServiceManager#registerService(Service)}.
-     *
-     * @param service the service to register.
-     */
-    public static void registerService(Service service) {
-        getInstance().getServiceManager().registerService(service);
-    }
-
-    /**
-     * Get the main service manager.
-     *
-     * @return the service manager.
-     */
-    public ServiceManager getServiceManager() {
-        return getInstance().serviceManager;
     }
 
     /**

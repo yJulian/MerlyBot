@@ -22,7 +22,11 @@ public class ScriptManager {
     }
 
     private void loadScripts() {
-        for (File file : SCRIPT_FOLDER.listFiles()) {
+        File[] files = SCRIPT_FOLDER.listFiles();
+        if (files == null)
+            return;
+
+        for (File file : files) {
             if (file.isFile()) {
                 if (file.getName().equals(MERLY_SCRIPT_POSTFIX)) {
                     try {

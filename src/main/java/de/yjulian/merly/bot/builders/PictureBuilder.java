@@ -1,4 +1,4 @@
-package de.yjulian.merly.util.builders;
+package de.yjulian.merly.bot.builders;
 
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.apache.commons.io.IOUtils;
@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.function.Consumer;
 
-public class PictureBuilder {
+public class PictureBuilder implements Sendable {
 
     private int height = 500, width = 500;
     private Graphics2D g;
@@ -70,4 +70,29 @@ public class PictureBuilder {
         channel.sendFile(getAsByteArray(), name + ".png").queue();
     }
 
+    /**
+     * Send the object to a specific text channel.
+     *
+     * @param channel the channel
+     */
+    @Override
+    public void send(TextChannel channel) {
+        try {
+            send(channel, "image");
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    /**
+     * Send the object to many channels.
+     *
+     * @param channels the channels.
+     */
+    @Override
+    public void bulkSend(TextChannel... channels) {
+        for (TextChannel channel : channels) {
+            send(channel);
+        }
+    }
 }
