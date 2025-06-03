@@ -1,24 +1,24 @@
 package de.yjulian.merly.subsystem.audio;
 
-import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
-import com.sedmelluq.discord.lavaplayer.track.AudioItem;
+// TODO: replace with Lavalink classes
+import lavalink.client.player.event.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class TrackLoadResult {
 
-    private final FriendlyException exception;
+    private final Exception exception;
     private final State state;
-    private final AudioItem item;
+    private final Object item;
 
-    TrackLoadResult(FriendlyException exception, State state, AudioItem item) {
+    TrackLoadResult(Exception exception, State state, Object item) {
         this.exception = exception;
         this.state = state;
         this.item = item;
     }
 
     @Nullable
-    public FriendlyException getException() {
+    public Exception getException() {
         return exception;
     }
 
@@ -28,7 +28,7 @@ public class TrackLoadResult {
     }
 
     @Nullable
-    public AudioItem getItem() {
+    public Object getItem() {
         return item;
     }
 

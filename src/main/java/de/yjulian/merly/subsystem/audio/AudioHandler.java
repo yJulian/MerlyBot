@@ -1,7 +1,8 @@
 package de.yjulian.merly.subsystem.audio;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
-import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
+// TODO: use Lavalink player classes
+import lavalink.client.player.LavalinkPlayer;
+import lavalink.client.player.event.Frame;
 import net.dv8tion.jda.api.audio.AudioSendHandler;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,15 +11,15 @@ import java.nio.ByteBuffer;
 public class AudioHandler implements AudioSendHandler {
 
     private static final boolean OPUS_FRAME = true;
-    private final AudioPlayer player;
-    private AudioFrame lastFrame;
+    private final LavalinkPlayer player;
+    private Frame lastFrame;
 
     /**
      * Create a new AudioPlayer handler with a provided {@link AudioPlayer}.
      *
      * @param player the player.
      */
-    public AudioHandler(AudioPlayer player) {
+    public AudioHandler(LavalinkPlayer player) {
         this.player = player;
     }
 
@@ -32,7 +33,8 @@ public class AudioHandler implements AudioSendHandler {
      */
     @Override
     public boolean canProvide() {
-        lastFrame = player.provide();
+        // TODO: get frame from Lavalink player
+        lastFrame = null;
         return lastFrame != null;
     }
 
@@ -58,7 +60,7 @@ public class AudioHandler implements AudioSendHandler {
     @Nullable
     @Override
     public ByteBuffer provide20MsAudio() {
-        return ByteBuffer.wrap(lastFrame.getData());
+        return lastFrame != null ? ByteBuffer.wrap(lastFrame.getData()) : null;
     }
 
     /**

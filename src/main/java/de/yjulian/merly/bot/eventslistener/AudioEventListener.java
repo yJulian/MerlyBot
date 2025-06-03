@@ -1,11 +1,12 @@
 package de.yjulian.merly.bot.eventslistener;
 
-import com.sedmelluq.discord.lavaplayer.player.event.AudioEvent;
-import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
+// TODO: update listener to Lavalink API
+import lavalink.client.player.event.PlayerEvent;
+import lavalink.client.player.event.PlayerEventAdapter;
 import de.yjulian.merly.events.AudioSystemEvent;
 import de.yjulian.merly.events.EventManager;
 
-public class AudioEventListener extends AudioEventAdapter {
+public class AudioEventListener extends PlayerEventAdapter {
 
     private final EventManager eventManager;
 
@@ -14,7 +15,7 @@ public class AudioEventListener extends AudioEventAdapter {
     }
 
     @Override
-    public void onEvent(AudioEvent event) {
+    public void onEvent(PlayerEvent event) {
         this.eventManager.fireEvent(new AudioSystemEvent(event));
     }
 }

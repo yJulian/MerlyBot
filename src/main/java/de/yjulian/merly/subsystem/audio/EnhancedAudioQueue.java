@@ -1,6 +1,7 @@
 package de.yjulian.merly.subsystem.audio;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioItem;
+// TODO: replace with Lavalink track type
+import lavalink.client.player.LavalinkTrack;
 
 public interface EnhancedAudioQueue extends AudioQueue {
 
@@ -9,6 +10,6 @@ public interface EnhancedAudioQueue extends AudioQueue {
      * @param prio a priority
      * @param item the item.
      */
-    void addTrack(int prio, AudioItem item);
+    void addTrack(int prio, LavalinkTrack item);
 
 }
