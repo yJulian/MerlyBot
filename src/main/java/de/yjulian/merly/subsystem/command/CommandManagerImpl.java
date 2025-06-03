@@ -6,6 +6,7 @@ import de.yjulian.merly.util.*;
 import de.yjulian.merly.bot.MerlyBot;
 import de.yjulian.merly.exceptions.CommandException;
 import de.yjulian.merly.subsystem.command.initial.HelpProviderCommand;
+import de.yjulian.merly.subsystem.command.initial.CatPictureCommand;
 import net.dv8tion.jda.api.entities.*;
 import org.jetbrains.annotations.Nullable;
 
@@ -77,6 +78,7 @@ public class CommandManagerImpl implements CommandManager, AliasManager, EventAd
 
     private void registerDefault() {
         addCommand(new HelpProviderCommand());
+        addCommand(new CatPictureCommand());
     }
 
     public AliasCommand applyAlias(String prefix) {
