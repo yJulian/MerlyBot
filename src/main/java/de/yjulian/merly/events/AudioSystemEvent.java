@@ -1,16 +1,17 @@
 package de.yjulian.merly.events;
 
-import com.sedmelluq.discord.lavaplayer.player.event.AudioEvent;
+// TODO: replace with Lavalink player event
+import lavalink.client.player.event.PlayerEvent;
 
 public class AudioSystemEvent implements Event {
 
-    private final AudioEvent event;
+    private final PlayerEvent event;
 
-    public AudioSystemEvent(AudioEvent event) {
+    public AudioSystemEvent(PlayerEvent event) {
         this.event = event;
     }
 
-    public AudioEvent getEvent() {
+    public PlayerEvent getEvent() {
         return event;
     }
 }

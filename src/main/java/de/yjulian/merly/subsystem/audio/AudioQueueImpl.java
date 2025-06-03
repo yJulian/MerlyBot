@@ -1,11 +1,11 @@
 package de.yjulian.merly.subsystem.audio;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
-import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
-import com.sedmelluq.discord.lavaplayer.track.AudioItem;
-import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+// TODO: use Lavalink client classes
+import lavalink.client.player.LavalinkPlayer;
+import lavalink.client.player.event.PlayerEventAdapter;
+import lavalink.client.player.LavalinkTrack;
+import lavalink.client.player.LavalinkPlaylist;
+import lavalink.client.player.event.TrackEndEvent;
 import de.yjulian.merly.bot.MerlyBot;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
@@ -18,13 +18,13 @@ public class AudioQueueImpl extends AudioEventAdapter implements AudioQueue {
     private static final long MIN_INACTIVITY_MS = 60000;
     private static final int DEFAULT_FRAME_BUFFER = 500;
 
-    private final AudioPlayer player;
-    private final Playlist<AudioTrack> playlist;
+    private final LavalinkPlayer player;
+    private final Playlist<LavalinkTrack> playlist;
     private final VoiceChannel voiceChannel;
 
     private long pausedSince = System.currentTimeMillis();
 
-    AudioQueueImpl(AudioPlayer player, VoiceChannel voiceChannel) {
+    AudioQueueImpl(LavalinkPlayer player, VoiceChannel voiceChannel) {
         this.player = player;
         this.playlist = new PlaylistImpl<>();
         this.voiceChannel = voiceChannel;
@@ -42,8 +42,8 @@ public class AudioQueueImpl extends AudioEventAdapter implements AudioQueue {
     }
 
     @Override
-    public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        if (endReason.equals(AudioTrackEndReason.FINISHED)) {
+    public void onTrackEnd(LavalinkPlayer player, LavalinkTrack track, TrackEndEvent endReason) {
+        if (true) { // TODO check end reason
             nextTrack();
         }
     }
@@ -72,7 +72,7 @@ public class AudioQueueImpl extends AudioEventAdapter implements AudioQueue {
      */
     @Override
     public boolean nextTrack() {
-        AudioTrack nextTrack = pollNextTrack();
+        LavalinkTrack nextTrack = pollNextTrack();
         if (nextTrack != null) {
             playTrack(nextTrack);
             return true;
@@ -88,7 +88,8 @@ public class AudioQueueImpl extends AudioEventAdapter implements AudioQueue {
      */
     @Override
     public boolean isPlaying() {
-        return player.getPlayingTrack() != null;
+        // TODO: adjust according to Lavalink API
+        return false;
     }
 
     /**
@@ -107,7 +108,7 @@ public class AudioQueueImpl extends AudioEventAdapter implements AudioQueue {
      */
     @Override
     public void stopTrack() {
-        player.stopTrack();
+        // TODO: stop playback in Lavalink
         pausedSince = System.currentTimeMillis();
     }
 
@@ -120,11 +121,11 @@ public class AudioQueueImpl extends AudioEventAdapter implements AudioQueue {
     }
 
     @Override
-    public void addTrack(AudioItem item) {
-        if (item instanceof AudioTrack) {
-            this.playlist.addTrack(Priority.MEDIUM, (AudioTrack) item);
-        } else if (item instanceof AudioPlaylist) {
-            for (AudioTrack track : ((AudioPlaylist) item).getTracks()) {
+    public void addTrack(LavalinkTrack item) {
+        if (item instanceof LavalinkTrack) {
+            this.playlist.addTrack(Priority.MEDIUM, item);
+        } else if (item instanceof LavalinkPlaylist) {
+            for (LavalinkTrack track : ((LavalinkPlaylist) item).getTracks()) {
                 this.playlist.addTrack(Priority.MEDIUM, track);
             }
         } else {
@@ -138,16 +139,16 @@ public class AudioQueueImpl extends AudioEventAdapter implements AudioQueue {
      * @param track the new track to play.
      */
     @Override
-    public void playTrack(AudioTrack track) {
-        this.player.playTrack(track);
+    public void playTrack(LavalinkTrack track) {
+        // TODO: play track via Lavalink
         this.pausedSince = -1;
     }
 
-    public AudioPlayer getPlayer() {
+    public LavalinkPlayer getPlayer() {
         return player;
     }
 
-    public Playlist<AudioTrack> getPlaylist() {
+    public Playlist<LavalinkTrack> getPlaylist() {
         return this.playlist;
     }
 
@@ -159,10 +160,10 @@ public class AudioQueueImpl extends AudioEventAdapter implements AudioQueue {
     /**
      * Get and remove the head of the playlist.
      *
-     * @return a AudioTrack or null.
+     * @return a LavalinkTrack or null.
      */
     @Override
-    public AudioTrack pollNextTrack() {
+    public LavalinkTrack pollNextTrack() {
         return this.playlist.poll();
     }
 

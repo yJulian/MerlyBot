@@ -1,11 +1,7 @@
 package de.yjulian.merly.util;
 
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeSearchMusicProvider;
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeSearchProvider;
-import com.sedmelluq.discord.lavaplayer.track.AudioItem;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+// TODO: migrate to lavalink search utilities
+import lavalink.client.player.LavalinkPlayer;
 
 public final class AudioUtil {
 
@@ -17,34 +13,17 @@ public final class AudioUtil {
 
     }
 
-    public static AudioItem youtubeSearch(String query) {
-        if (youtubeSearchProvider == null) {
-            youtubeSearchProvider = new YoutubeSearchProvider();
-        }
-
-        return youtubeSearchProvider.loadSearchResult(query, info -> {
-            if (youtubeAudioSourceManager == null) {
-                youtubeAudioSourceManager = new YoutubeAudioSourceManager();
-            }
-            return new YoutubeAudioTrack(info, youtubeAudioSourceManager);
-        });
+    // TODO: implement search using Lavalink
+    public static Object youtubeSearch(String query) {
+        return null;
     }
 
-    public static AudioItem youtubeMusicSearch(String query) {
-        if (youtubeSearchMusicProvider == null) {
-            youtubeSearchMusicProvider = new YoutubeSearchMusicProvider();
-        }
-
-        return youtubeSearchMusicProvider.loadSearchMusicResult(query, info -> {
-            if (youtubeAudioSourceManager == null) {
-                youtubeAudioSourceManager = new YoutubeAudioSourceManager();
-            }
-            return new YoutubeAudioTrack(info, youtubeAudioSourceManager);
-        });
+    public static Object youtubeMusicSearch(String query) {
+        return null;
     }
 
-    public static AudioTrack cloneAudioTrack(AudioTrack track) {
-        return track.makeClone();
+    public static Object cloneAudioTrack(Object track) {
+        return null;
     }
 
 }

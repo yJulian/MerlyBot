@@ -1,10 +1,8 @@
 package de.yjulian.merly.subsystem.audio;
 
-import com.sedmelluq.discord.lavaplayer.player.*;
-import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
-import com.sedmelluq.discord.lavaplayer.track.AudioItem;
-import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+// TODO: Replace lavaplayer imports with lavalink client equivalents
+import lavalink.client.player.LavalinkPlayer;
+import lavalink.client.player.event.PlayerEvent;
 import de.yjulian.merly.bot.MerlyBot;
 import de.yjulian.merly.exceptions.BotUnavailableException;
 import de.yjulian.merly.util.EnumUtils;
@@ -17,43 +15,23 @@ import java.util.function.Consumer;
 
 public class AudioManager {
 
-    private final AudioPlayerManager manager;
+    // TODO: use appropriate Lavalink client class
+    private final LavalinkPlayer manager;
     private final HashMap<Guild, AudioQueue> audioQueues = new HashMap<>();
 
     public AudioManager() {
-        this.manager = new DefaultAudioPlayerManager();
+        // TODO: initialize Lavalink player
+        this.manager = null;
         init();
     }
 
     private void init() {
         MerlyBot.getLogger().info("Initializing Merly Bot - Audio Manager");
-        AudioConfiguration.ResamplingQuality resamplingQuality = EnumUtils
-                .getOrDefault(AudioConfiguration.ResamplingQuality.class,
-                        System.getenv("MERLY_RESAMPLING_QUALITY"),
-                        AudioConfiguration.ResamplingQuality.MEDIUM
-                );
-        MerlyBot.getLogger().info(String.format("Audio Resampling Quality: %s", resamplingQuality.name()));
-
+        // TODO: configure Lavalink connection
         MerlyBot.getLogger().info("Initializing Merly Bot - Finished");
-        setCurrentQuality(resamplingQuality);
     }
 
-    public AudioConfiguration.ResamplingQuality getCurrentQuality() {
-        return getConfiguration().getResamplingQuality();
-    }
-
-    public void setCurrentQuality(AudioConfiguration.ResamplingQuality quality) {
-        getConfiguration().setResamplingQuality(quality);
-        MerlyBot.getLogger().debug(String.format("Audio Resampling Quality updated to %s", quality.name()));
-    }
-
-    /**
-     * Get the current audio configuration.
-     * @return the current configuration.
-     */
-    public AudioConfiguration getConfiguration() {
-        return this.manager.getConfiguration();
-    }
+    // TODO: implement Lavalink audio configuration methods if needed
 
     /**
      * Get a audio queue for the voice channel provided. If no player is available the method with throw
@@ -81,39 +59,17 @@ public class AudioManager {
             }
         }
 
-        AudioPlayer player = manager.createPlayer();
+        // TODO: create Lavalink player instance
+        LavalinkPlayer player = manager;
 
         AudioQueueImpl audioQueue = new AudioQueueImpl(player, voiceChannel);
         audioQueues.put(guild, audioQueue);
         return audioQueue;
     }
 
-    void getTrack(String identifier, Consumer<AudioItem> itemConsumer, Consumer<TrackLoadResult> result) {
-        manager.loadItem(identifier, new AudioLoadResultHandler() {
-            @Override
-            public void trackLoaded(AudioTrack track) {
-                itemConsumer.accept(track);
-                result.accept(new TrackLoadResult(null, TrackLoadResult.State.TRACK, track));
-            }
-
-            @Override
-            public void playlistLoaded(AudioPlaylist playlist) {
-                itemConsumer.accept(playlist);
-                result.accept(new TrackLoadResult(null, TrackLoadResult.State.PLAYLIST, playlist));
-            }
-
-            @Override
-            public void noMatches() {
-                itemConsumer.accept(null);
-                result.accept(new TrackLoadResult(null, TrackLoadResult.State.NOTHING_FOUND, null));
-            }
-
-            @Override
-            public void loadFailed(FriendlyException exception) {
-                itemConsumer.accept(null);
-                result.accept(new TrackLoadResult(exception, TrackLoadResult.State.EXCEPTION, null));
-            }
-        });
+    // TODO: implement track loading via Lavalink client
+    void getTrack(String identifier, Consumer<Object> itemConsumer, Consumer<TrackLoadResult> result) {
+        // Implementation pending
     }
 
 }

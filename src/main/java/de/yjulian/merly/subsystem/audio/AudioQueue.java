@@ -1,7 +1,7 @@
 package de.yjulian.merly.subsystem.audio;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioItem;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+// TODO: replace with Lavalink track types
+import lavalink.client.player.LavalinkTrack;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 
 import java.util.function.Consumer;
@@ -55,13 +55,13 @@ public interface AudioQueue {
      * Add tracks to the queue.
      * @param item a audio item
      */
-    void addTrack(AudioItem item);
+    void addTrack(LavalinkTrack item);
 
     /**
      * Play a track instantly.
      * @param track a audio track.
      */
-    void playTrack(AudioTrack track);
+    void playTrack(LavalinkTrack track);
 
     /**
      * Get the voice channel the bot is currently.
@@ -72,9 +72,9 @@ public interface AudioQueue {
 
     /**
      * Get and remove the head of the playlist.
-     * @return a AudioTrack or null.
+     * @return a LavalinkTrack or null.
      */
-    AudioTrack pollNextTrack();
+    LavalinkTrack pollNextTrack();
 
     /**
      * Load a track from a specific identifier. E.g. a youtube link.
